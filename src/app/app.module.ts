@@ -2,6 +2,14 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ButtonModule } from "primeng/button";
+import { FormsModule } from "@angular/forms";
+import { InputTextModule } from 'primeng/inputtext';
+import { CalendarModule } from "primeng/calendar";
+import { SliderModule } from 'primeng/slider';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { CheckboxModule } from 'primeng/checkbox';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { ReactiveFormsModule } from "@angular/forms";
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
@@ -18,7 +26,15 @@ import { MainComponent } from "./main/main.component";
     BrowserModule,
     OverlayPanelModule,
     ButtonModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    InputTextModule,
+    SliderModule,
+    FormsModule,
+    CalendarModule,
+    InputNumberModule,
+    CheckboxModule,
+    MultiSelectModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

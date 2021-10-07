@@ -7,6 +7,10 @@ $content-subpart-width: 85%;
   justify-items: center;
 }
 
+input {
+  text-align: left;
+}
+
 .content-part {
   display:flex;
   justify-content: center;
@@ -33,13 +37,15 @@ $content-subpart-width: 85%;
   align-items: end;
   font-family: 'Montserrat', sans-serif;
   font-size: 38px;
+  font-weight: 500;
   text-transform: uppercase;
-  padding-bottom: 15px;
+  padding-bottom: 18px;
 }
 
 .text-count {
   font-size: 26px;
   padding-left: 12px;
+  margin-bottom: 3px;
 }
 
 .content-filter {
@@ -49,19 +55,18 @@ $content-subpart-width: 85%;
 
 .content-filter-buttons {
   //padding-left: 15px;
+  box-sizing: border-box;
 }
 
 .overlay-button {
-  border: none;
   background: none;
   text-transform: uppercase;
   font-family: 'Montserrat', sans-serif;
   font-style: italic;
   font-size: 26px;
-  transition: 250ms;
   color: black;
   width: auto;
-  box-sizing: border-box;
+  border: 1px solid transparent;
 }
 
 .overlay-button:hover {
@@ -70,6 +75,75 @@ $content-subpart-width: 85%;
   background: none;
 }
 
-.content-collection {
-
+.overlay-button-filtered {
+  font-weight: 600;
+  border-bottom: 1px solid black;
 }
+
+.op-content {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+}
+
+.op-content-row {
+  align-items: center;
+  flex-direction: row;
+
+  p {
+    padding: 0 12px;
+  }
+}
+
+::ng-deep .p-inputnumber-input {
+  text-align: left;
+  width: 100px;
+}
+
+p-checkbox {
+  margin: 8px 0;
+}
+
+::ng-deep .p-checkbox-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 22px !important;
+  margin-left: 6px;
+}
+
+::ng-deep .p-multiselect {
+  width: 240px;
+}
+
+::ng-deep .p-multiselect-filter {
+  text-align: left !important;
+}
+
+.op-content-discipline {
+  ::ng-deep .p-inputnumber-input {
+    width: 240px;
+  }
+}
+
+.op-content-row-creation-date {
+  ::ng-deep .p-calendar {
+    width: 300px !important;
+  }
+}
+
+.overlay-header {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  text-align: left;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  color: black;
+  font-style: italic;
+}
+
+#username-help {
+  margin-top: 7px;
+  text-align: left;
+}
+
+

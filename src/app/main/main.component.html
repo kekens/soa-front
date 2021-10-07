@@ -9,19 +9,81 @@
 
   <div class="content-part content-filter">
     <div class="content-subpart content-filter-buttons">
-      <p-overlayPanel #op [showCloseIcon]="true">
-        <ng-template pTemplate>
-          Content
-        </ng-template>
-      </p-overlayPanel>
-      <button pButton class="overlay-button" label="Имя " icon="pi pi-chevron-down" iconPos="right" (click)="op.toggle($event)"></button>
 
-      <p-overlayPanel #op [showCloseIcon]="true">
-        <ng-template pTemplate>
-          Content
-        </ng-template>
+<!--      Filter name-->
+      <p-overlayPanel #opName>
+        <div class="op-content">
+          <input type="text" pInputText [(ngModel)]="name"/>
+          <small id="username-help">Введите шаблон имени</small>
+        </div>
       </p-overlayPanel>
-      <button pButton class="overlay-button" label="Координаты" icon="pi pi-chevron-down" iconPos="right" (click)="op.toggle($event)"></button>
+      <button [ngClass]="{'overlay-button-filtered' : name != null}" pButton class="overlay-button" label="Имя " icon="pi pi-chevron-down" iconPos="right" (click)="opName.toggle($event)"></button>
+
+<!--      Filter coordinates-->
+      <p-overlayPanel #opCoordinates (onHide)="logForm()">
+        <div class="op-content">
+          <p class="overlay-header">Координата X</p>
+          <div class="op-content op-content-row op-content-row-coordinates">
+            <p>От</p>
+            <p-inputNumber [(ngModel)]="coordinatesXFrom" mode="decimal"></p-inputNumber>
+            <p>До</p>
+            <p-inputNumber [(ngModel)]="coordinatesXUntil" mode="decimal" [min]="coordinatesXFrom"></p-inputNumber>
+          </div>
+
+          <p class="overlay-header">Координата Y</p>
+          <div class="op-content op-content-row op-content-row-coordinates">
+            <p>От</p>
+            <p-inputNumber [(ngModel)]="coordinatesYFrom" mode="decimal" [min]="-895"></p-inputNumber>
+            <p>До</p>
+            <p-inputNumber [(ngModel)]="coordinatesYUntil" mode="decimal" [min]="coordinatesYFrom"></p-inputNumber>
+          </div>
+        </div>
+      </p-overlayPanel>
+      <button [ngClass]="{'overlay-button-filtered' : isCoordinatesFiltered()}" pButton class="overlay-button" label="Координаты" icon="pi pi-chevron-down" iconPos="right" (click)="opCoordinates.toggle($event)"></button>
+
+<!--      Filter creation date-->
+      <p-overlayPanel #opCreationDate>
+        <div class="op-content">
+          <div class="op-content op-content-row op-content-row-creation-date">
+            <p-calendar [(ngModel)]="rangeDates" selectionMode="range" dateFormat="dd-mm-yy"></p-calendar>
+          </div>
+        </div>
+      </p-overlayPanel>
+      <button [ngClass]="{'overlay-button-filtered' : rangeDates != null}" pButton class="overlay-button" label="Дата создания" icon="pi pi-chevron-down" iconPos="right" (click)="opCreationDate.toggle($event)"></button>
+
+<!--      Filer minimal point-->
+      <p-overlayPanel #opMinimalPoint>
+        <div class="op-content op-content-row op-content-row-coordinates">
+          <p>От</p>
+          <p-inputNumber [(ngModel)]="minimalPointFrom" mode="decimal" [min]="1"></p-inputNumber>
+          <p>До</p>
+          <p-inputNumber [(ngModel)]="minimalPointUntil" mode="decimal" [min]="minimalPointFrom"></p-inputNumber>
+        </div>
+      </p-overlayPanel>
+      <button [ngClass]="{'overlay-button-filtered' : isMinimalPointFiltered()}" pButton class="overlay-button" label="Минимальная оценка" icon="pi pi-chevron-down" iconPos="right" (click)="opMinimalPoint.toggle($event)"></button>
+
+<!--      Filter difficulty-->
+      <p-overlayPanel #opDifficulty>
+        <div class="op-content">
+          <p-checkbox name="groupname" label="Легко" value="VERY_EASY" [(ngModel)]="selectedDifficulties"></p-checkbox>
+          <p-checkbox name="groupname" label="Нормально" value="NORMAL" [(ngModel)]="selectedDifficulties"></p-checkbox>
+          <p-checkbox name="groupname" label="Невозможно" value="IMPOSSIBLE" [(ngModel)]="selectedDifficulties"></p-checkbox>
+        </div>
+      </p-overlayPanel>
+      <button [ngClass]="{'overlay-button-filtered' : selectedDifficulties != null}" pButton class="overlay-button" label="Сложность" icon="pi pi-chevron-down" iconPos="right" (click)="opDifficulty.toggle($event)"></button>
+
+<!--      Filter discipline-->
+      <p-overlayPanel #opDiscipline>
+        <div class="op-content op-content-discipline">
+          <p class="overlay-header">Название</p>
+          <p-multiSelect [options]="disciplines" [(ngModel)]="selectedDisciplines" optionLabel=""></p-multiSelect>
+
+          <p class="overlay-header">Кол-во часов</p>
+          <p-inputNumber [(ngModel)]="lectureHours" mode="decimal" [min]="0"></p-inputNumber>
+        </div>
+      </p-overlayPanel>
+      <button [ngClass]="{'overlay-button-filtered' : isDisciplineFiltered()}" pButton class="overlay-button" label="Дисциплина" icon="pi pi-chevron-down" iconPos="right" (click)="opDiscipline.toggle($event)"></button>
+
     </div>
   </div>
 
