@@ -1,0 +1,33 @@
+<div id="content">
+
+
+  <div class="content-part content-title">
+    <div class="content-subpart content-title-text">
+      Лабораторные работы <p class="text-count">[]</p>
+    </div>
+  </div>
+
+  <div class="content-part content-filter">
+    <div class="content-subpart content-filter-buttons">
+      <p-overlayPanel #op [showCloseIcon]="true">
+        <ng-template pTemplate>
+          Content
+        </ng-template>
+      </p-overlayPanel>
+      <button pButton class="overlay-button" label="Имя " icon="pi pi-chevron-down" iconPos="right" (click)="op.toggle($event)"></button>
+
+      <p-overlayPanel #op [showCloseIcon]="true">
+        <ng-template pTemplate>
+          Content
+        </ng-template>
+      </p-overlayPanel>
+      <button pButton class="overlay-button" label="Координаты" icon="pi pi-chevron-down" iconPos="right" (click)="op.toggle($event)"></button>
+    </div>
+  </div>
+
+  <div class="content-part content-collection">
+    <div class="content-subpart">
+
+    </div>
+  </div>
+</div>
