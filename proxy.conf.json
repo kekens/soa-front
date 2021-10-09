@@ -1,0 +1,7 @@
+{
+  "/soa-1/lab-work": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": true
+  }
+}
