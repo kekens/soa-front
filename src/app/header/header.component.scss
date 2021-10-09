@@ -2,7 +2,7 @@ header {
   height: 7%;
   width: 100%;
   box-sizing: border-box;
-  border-bottom: 0.5px solid lightgrey;
+  border-bottom: 1px solid black;
   display: flex;
   align-items: center;
   justify-content: left;
@@ -17,7 +17,7 @@ header {
 }
 
 .header-logo {
-  width: 10%;
+  width: 9%;
   justify-content: center;
 
   img {
@@ -27,7 +27,7 @@ header {
 }
 
 #header-content {
-  width: 80%;
+  width: 46%;
   font-size: 32px;
   font-weight: bold;
   text-transform: uppercase;
