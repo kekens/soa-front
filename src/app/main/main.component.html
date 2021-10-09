@@ -2,8 +2,85 @@
 
 
   <div class="content-part content-title">
-    <div class="content-subpart content-title-text">
-      Лабораторные работы <p class="text-count" >[{{labWorks? labWorks.length : '0'}}]</p>
+    <div class="content-subpart content-subpart-title">
+      <div class="content-subpart-title-text">
+        Лабораторные работы <p class="text-count" >[{{labWorks? labWorks.length : '0'}}]</p>
+      </div>
+      <div class="content-subpart-title-buttons">
+        <!--  Dialogs for extra actions-->
+        <p-dialog header="Удалить случайный объект заданной сложности" [dismissableMask]="true" [(visible)]="displayModal1" [modal]="true"
+                  [style]="{width: '40vw', top: '-180px'}" [draggable]="false" [resizable]="false">
+          <p class="dialog-text">
+            Выберите сложность, и нажмите кнопку, чтобы удалить случайный объект заданной сложности
+          </p>
+          <p-dropdown [options]="optionDifficulties" [(ngModel)]="selectedDifficultyExtra" placeholder="Выберите сложность" optionLabel="name"></p-dropdown>
+          <ng-template pTemplate="footer">
+            <p-button icon="pi pi-trash" (onClick)="deleteRandom(); refresh()" label="Удалить" styleClass="p-button-text"></p-button>
+          </ng-template>
+        </p-dialog>
+
+        <p-dialog header="Вернуть количество объектов при заданной сложности" [dismissableMask]="true" [(visible)]="displayModal2" [modal]="true"
+                  [style]="{width: '40vw', top: '-180px'}" [draggable]="false" [resizable]="false">
+          <p class="dialog-text">
+            Выберите сложность, и нажмите кнопку, чтобы посмотреть количество объектов, сложность которых выше заданной
+          </p>
+          <p-dropdown [options]="optionDifficulties" [(ngModel)]="selectedDifficultyExtra" placeholder="Выберите сложность" optionLabel="name"></p-dropdown>
+          <ng-template pTemplate="footer">
+            <p-button icon="pi pi-check" (onClick)="getCount(); displayModal2=false" label="Отправить" styleClass="p-button-text"></p-button>
+          </ng-template>
+        </p-dialog>
+
+        <p-splitButton (onClick)="showModalDialog1()" label="Удалить объект по сложности" [model]="splitButtonItems" class="button-split"></p-splitButton>
+
+        <!--Create dialog-->
+        <p-dialog header="Добавить лабораторную работу" [dismissableMask]="true" [(visible)]="displayModalCreate" [modal]="true"
+                  [style]="{width: '40vw'}" [draggable]="false" [resizable]="false">
+          <p class="dialog-text">
+            Заполните поля и нажмите кнопку добавить
+          </p>
+          <form [formGroup]="formCreate" novalidate (ngSubmit)="createLabWork()">
+            <div class="dialog-input-div">
+              <p class="dialog-text dialog-text-input">
+                Имя
+              </p>
+              <input type="text" pInputText formControlName="labName"/>
+            </div>
+            <div class="dialog-input-div">
+              <p class="dialog-text dialog-text-input">
+                Координаты
+              </p>
+              <div>
+                <p-inputNumber style="margin-right: 10px;" formControlName="labX" mode="decimal"></p-inputNumber>
+                <p-inputNumber formControlName="labY" mode="decimal"></p-inputNumber>
+              </div>
+            </div>
+            <div class="dialog-input-div">
+              <p class="dialog-text dialog-text-input">
+                Минимальная оценка
+              </p>
+              <p-inputNumber formControlName="labMinimalPoint" mode="decimal"></p-inputNumber>
+            </div>
+            <div class="dialog-input-div">
+              <p class="dialog-text dialog-text-input">
+                Сложность
+              </p>
+              <p-dropdown [options]="optionDifficulties" formControlName="labDifficulty" placeholder="Выберите сложность" optionLabel="name" optionValue="value"></p-dropdown>
+            </div>
+            <div style="margin-bottom: 50px !important;" class="dialog-input-div">
+              <p class="dialog-text dialog-text-input">
+                Дисциплина
+              </p>
+              <p-dropdown [options]="optionDisciplines" formControlName="labDiscipline" placeholder="Выберите дисциплину" optionLabel="name">
+
+              </p-dropdown>
+            </div>
+
+            <p-button icon="pi pi-plus" [disabled]="formCreate.invalid" (onClick)="displayModalCreate=false" label="Добавить" type="submit" styleClass="p-button-text"></p-button>
+          </form>
+        </p-dialog>
+
+        <button (click)="showModalDialogCreate()" pButton pRipple type="button" icon="pi pi-plus" class=" p-button-text button-add"></button>
+      </div>
     </div>
   </div>
 
@@ -77,7 +154,7 @@
       <p-overlayPanel #opDiscipline (onHide)="filterList()">
         <div class="op-content op-content-discipline">
           <p class="overlay-header">Название</p>
-          <p-multiSelect [options]="disciplines" [(ngModel)]="selectedDisciplines" optionLabel=""></p-multiSelect>
+          <p-multiSelect [options]="optionDisciplines" [(ngModel)]="selectedDisciplines" optionLabel="name" optionValue="id"></p-multiSelect>
 
 <!--          <p class="overlay-header">Кол-во часов</p>-->
 <!--          <p-inputNumber [(ngModel)]="lectureHours" mode="decimal" [min]="0"></p-inputNumber>-->
@@ -134,3 +211,6 @@
     </div>
   </div>
 </div>
+
+<p-toast position="top-right" [baseZIndex]="20000">
+</p-toast>

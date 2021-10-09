@@ -22,24 +22,141 @@ input {
   display: flex;
   width: $content-subpart-width;
   box-sizing: border-box;
-  //border: 3px solid red;
   border-bottom: 1px solid black;
 
+  div {
+    //border: 3px solid red;
+  }
+}
+
+.content-subpart-title {
+  flex-direction: row;
+  justify-content: space-between;
+
+  div {
+    display: flex;
+    align-items: flex-end;
+  }
 }
 
 .content-title {
   //border-bottom: 1px solid lightgrey;
 }
 
-.content-title-text {
-  display: flex;
+.content-subpart-title-text {
   justify-content: start;
-  align-items: end;
   font-family: 'Montserrat', sans-serif;
   font-size: 38px;
   font-weight: 500;
   text-transform: uppercase;
   padding-bottom: 18px;
+}
+
+.content-subpart-title-buttons {
+  justify-content: flex-end;
+
+  .button-add {
+    //margin-left: 40px;
+    color: black;
+    width: 100px;
+    height: 80px;
+    transition: all 0.3s ease-out !important;
+
+    ::ng-deep .p-button-icon {
+      font-size: 30px;
+    }
+  }
+
+  .button-split {
+    ::ng-deep {
+      .p-splitbutton {
+        height: 80px;
+        width: 700px;
+
+        button {
+          background: transparent;
+          color: black;
+          border: 0;
+          font-family: 'Montserrat', sans-serif;
+          font-size: 38px;
+        }
+      }
+
+      .p-menu {
+        border-left: 2px solid black;
+        border-right: 2px solid black;
+        border-bottom: 2px solid black;
+      }
+    }
+
+  }
+
+  .button-split:hover {
+    ::ng-deep .p-splitbutton {
+      .p-splitbutton-defaultbutton {
+        background: #ebebeb;
+      }
+
+      .p-splitbutton-menubutton {
+        background: #e1e1e1
+      }
+    }
+  }
+}
+
+p-dialog {
+  display: flex;
+  flex-direction: column;
+
+  ::ng-deep .p-dropdown {
+    margin-top: 20px;
+    width: 300px;
+  }
+
+  ::ng-deep .p-dropdown-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 20px;
+  }
+
+
+}
+
+.dialog-input-div {
+  display: flex;
+  flex-direction: column;
+  justify-items: flex-start !important;
+  align-items: flex-start !important;
+  width: 100%;
+  //border: 2px solid red;
+  margin: 18px 0;
+
+  * {
+    //border: 2px solid green;
+  }
+}
+
+.dialog-text-input {
+  color: black;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.dialog-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+}
+
+::ng-deep .p-menuitem-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px;
+}
+
+.button-add:hover {
+  background: #ebebeb !important;
 }
 
 .text-count {

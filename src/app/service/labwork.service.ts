@@ -14,6 +14,11 @@ export class LabWorkService {
   constructor(private httpClient: HttpClient) {
   }
 
+  // TODO RETURN INTEGRITY ERROR
+  addLabWork(labWorkModel: LabWorkModel): Observable<string> {
+    return this.httpClient.post<string>(this.url, labWorkModel);
+  }
+
   getAllLabWorks(paramsModel?: ParamsModel): Observable<Array<LabWorkModel>> {
     if (paramsModel != null) {
       let params = this.getParams(paramsModel)
@@ -21,6 +26,15 @@ export class LabWorkService {
     } else {
       return this.httpClient.get<Array<LabWorkModel>>(this.url);
     }
+  }
+
+  deleteRandomLabWork(difficulty: string): Observable<string> {
+    return this.httpClient.delete<string>(this.url+'/difficulty?difficulty=' + difficulty);
+  }
+
+  getCountLabWork(difficulty: string): Observable<string> {
+    console.log(difficulty)
+    return this.httpClient.get<string>(this.url+'/difficulty/count?difficulty=' + difficulty);
   }
 
   getParams(paramsModel: ParamsModel): HttpParams {
@@ -78,6 +92,14 @@ export class LabWorkService {
         params = params.append('difficulty', diff);
       }
     }
+
+    // Discipline
+    if (paramsModel.selectedDifficulties != null) {
+      for (let disc of paramsModel.selectedDisciplines) {
+        params = params.append('discipline_name', disc);
+      }
+    }
+
     return params;
   }
 
