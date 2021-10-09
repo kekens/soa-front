@@ -3,7 +3,7 @@
 
   <div class="content-part content-title">
     <div class="content-subpart content-title-text">
-      Лабораторные работы <p class="text-count">[]</p>
+      Лабораторные работы <p class="text-count" >[{{labWorks? labWorks.length : '0'}}]</p>
     </div>
   </div>
 
@@ -11,16 +11,16 @@
     <div class="content-subpart content-filter-buttons">
 
 <!--      Filter name-->
-      <p-overlayPanel #opName>
+      <p-overlayPanel #opName (onHide)="filterList()">
         <div class="op-content">
           <input type="text" pInputText [(ngModel)]="name"/>
           <small id="username-help">Введите шаблон имени</small>
         </div>
       </p-overlayPanel>
-      <button [ngClass]="{'overlay-button-filtered' : name != null}" pButton class="overlay-button" label="Имя " icon="pi pi-chevron-down" iconPos="right" (click)="opName.toggle($event)"></button>
+      <button [ngClass]="{'overlay-button-filtered' : (name != '' && name != null)}" pButton class="overlay-button" label="Имя " icon="pi pi-chevron-down" iconPos="right" (click)="opName.toggle($event)"></button>
 
 <!--      Filter coordinates-->
-      <p-overlayPanel #opCoordinates (onHide)="logForm()">
+      <p-overlayPanel #opCoordinates (onHide)="filterList()">
         <div class="op-content">
           <p class="overlay-header">Координата X</p>
           <div class="op-content op-content-row op-content-row-coordinates">
@@ -42,17 +42,18 @@
       <button [ngClass]="{'overlay-button-filtered' : isCoordinatesFiltered()}" pButton class="overlay-button" label="Координаты" icon="pi pi-chevron-down" iconPos="right" (click)="opCoordinates.toggle($event)"></button>
 
 <!--      Filter creation date-->
-      <p-overlayPanel #opCreationDate>
+      <p-overlayPanel #opCreationDate (onHide)="filterList()">
         <div class="op-content">
           <div class="op-content op-content-row op-content-row-creation-date">
-            <p-calendar [(ngModel)]="rangeDates" selectionMode="range" dateFormat="dd-mm-yy"></p-calendar>
+            <p-calendar [(ngModel)]="rangeDates" [showIcon]="true" selectionMode="range" dateFormat="dd-mm-yy">
+            </p-calendar>
           </div>
         </div>
       </p-overlayPanel>
       <button [ngClass]="{'overlay-button-filtered' : rangeDates != null}" pButton class="overlay-button" label="Дата создания" icon="pi pi-chevron-down" iconPos="right" (click)="opCreationDate.toggle($event)"></button>
 
 <!--      Filer minimal point-->
-      <p-overlayPanel #opMinimalPoint>
+      <p-overlayPanel #opMinimalPoint (onHide)="filterList()">
         <div class="op-content op-content-row op-content-row-coordinates">
           <p>От</p>
           <p-inputNumber [(ngModel)]="minimalPointFrom" mode="decimal" [min]="1"></p-inputNumber>
@@ -63,7 +64,7 @@
       <button [ngClass]="{'overlay-button-filtered' : isMinimalPointFiltered()}" pButton class="overlay-button" label="Минимальная оценка" icon="pi pi-chevron-down" iconPos="right" (click)="opMinimalPoint.toggle($event)"></button>
 
 <!--      Filter difficulty-->
-      <p-overlayPanel #opDifficulty>
+      <p-overlayPanel #opDifficulty (onHide)="filterList()">
         <div class="op-content">
           <p-checkbox name="groupname" label="Легко" value="VERY_EASY" [(ngModel)]="selectedDifficulties"></p-checkbox>
           <p-checkbox name="groupname" label="Нормально" value="NORMAL" [(ngModel)]="selectedDifficulties"></p-checkbox>
@@ -73,13 +74,13 @@
       <button [ngClass]="{'overlay-button-filtered' : selectedDifficulties != null}" pButton class="overlay-button" label="Сложность" icon="pi pi-chevron-down" iconPos="right" (click)="opDifficulty.toggle($event)"></button>
 
 <!--      Filter discipline-->
-      <p-overlayPanel #opDiscipline>
+      <p-overlayPanel #opDiscipline (onHide)="filterList()">
         <div class="op-content op-content-discipline">
           <p class="overlay-header">Название</p>
           <p-multiSelect [options]="disciplines" [(ngModel)]="selectedDisciplines" optionLabel=""></p-multiSelect>
 
-          <p class="overlay-header">Кол-во часов</p>
-          <p-inputNumber [(ngModel)]="lectureHours" mode="decimal" [min]="0"></p-inputNumber>
+<!--          <p class="overlay-header">Кол-во часов</p>-->
+<!--          <p-inputNumber [(ngModel)]="lectureHours" mode="decimal" [min]="0"></p-inputNumber>-->
         </div>
       </p-overlayPanel>
       <button [ngClass]="{'overlay-button-filtered' : isDisciplineFiltered()}" pButton class="overlay-button" label="Дисциплина" icon="pi pi-chevron-down" iconPos="right" (click)="opDiscipline.toggle($event)"></button>
@@ -88,8 +89,48 @@
   </div>
 
   <div class="content-part content-collection">
-    <div class="content-subpart">
+    <div class="content-subpart content-collection-list">
+      <div class="labwork-content" *ngFor="let lab of labWorks">
+        <div class="labwork-content-id">
+          <p>
+            {{ lab.id }}
+          </p>
+        </div>
+        <div class="labwork-content-data">
+          <div class="lw-data-item1">
+            <p>
+              {{ lab.discipline.name }} - {{ lab.name }}
+            </p>
+          </div>
+          <div class="lw-data-item2">
+            <p>
+              Минимальная оценка -- {{ lab.minimalPoint }}
+            </p>
+            <div [ngSwitch]="lab.difficulty">
+              <ng-template ngSwitchCase="VERY_EASY"><p>Легко</p></ng-template>
+              <ng-template ngSwitchCase="NORMAL"><p>Нормально</p></ng-template>
+              <ng-template ngSwitchCase="IMPOSSIBLE"><p>Невозможно</p></ng-template>
+              <ng-template ngSwitchDefault><p></p></ng-template>
+            </div>
+          </div>
+          <div class="lw-data-item3">
+            <div class="lw-data-item3-coordinates">
+              <p class="lw-data-item3-coordinates-title">X</p>
+              <p class="lw-data-item3-coordinates-value">{{ lab.coordinates.x }}</p>
+            </div>
+            <div class="lw-data-item3-coordinates">
+              <p class="lw-data-item3-coordinates-title">Y</p>
+              <p class="lw-data-item3-coordinates-value">{{ lab.coordinates.y }}</p>
+            </div>
+          </div>
 
+          <div class="lw-data-item4">
+            <p>
+              {{lab.creationDate}}
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
