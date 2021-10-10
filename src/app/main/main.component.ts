@@ -1,5 +1,5 @@
 // @ts-nocheck
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {LabWorkService} from "../service/labwork.service";
 import {LabWorkModel} from "../model/labwork.model";
 import {ParamsModel} from "../model/params.model";
@@ -7,6 +7,7 @@ import {ConfirmationService, MenuItem, MessageService} from "primeng/api";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DialogService} from "primeng/dynamicdialog";
 import {LabWorkDialogComponent} from "../labwork-dialog/labwork-dialog.component";
+import {Paginator} from "primeng/paginator";
 
 @Component({
   selector: 'app-main',
@@ -15,6 +16,8 @@ import {LabWorkDialogComponent} from "../labwork-dialog/labwork-dialog.component
   providers: [MessageService, ConfirmationService, DialogService]
 })
 export class MainComponent  implements ngOnInit {
+
+  @ViewChild('paginator', { static: true }) paginator: Paginator
 
   // Form and labwork for creating
   formCreate: FormGroup;
@@ -48,6 +51,10 @@ export class MainComponent  implements ngOnInit {
   selectedDifficultiesFilter: string[] = localStorage.getItem('selectedDifficultiesFilter');
   selectedDisciplinesFilter: Discipline = localStorage.getItem('selectedDisciplinesFilter');
   sortParam: string = localStorage.getItem('sortParam');
+  pageFilter: number = (localStorage.getItem('pageFilter') == null) ? 1 : parseInt(localStorage.getItem('pageFilter'))
+  countFilter: number = (localStorage.getItem('countFilter') == null) ? 5 : parseInt(localStorage.getItem('countFilter'))
+
+  countAll: number = 0;
 
   constructor(private labWorkService: LabWorkService, private messageService: MessageService,
               private formBuilder: FormBuilder, private confirmationService: ConfirmationService, private dialogService: DialogService) {
@@ -86,9 +93,14 @@ export class MainComponent  implements ngOnInit {
       difficulty: null,
       discipline: null,
     }
+
   }
 
   ngOnInit() {
+    this.paginator.totalRecords = 100
+    this.paginator.rows = this.countFilter
+    setTimeout(() => { this.paginator.changePage(this.pageFilter-1) }, 0);
+
     this.filterList()
   }
 
@@ -155,6 +167,22 @@ export class MainComponent  implements ngOnInit {
     });
   }
 
+  // Pagination
+  paginate(event) {
+    this.pageFilter = event.page + 1
+    localStorage.setItem('pageFilter', event.page + 1)
+
+    this.countFilter = event.rows
+    localStorage.setItem('countFilter', event.rows)
+
+    this.filterList()
+
+    //event.first = Index of the first record
+    //event.rows = Number of rows to display in new page
+    //event.page = Index of the new page
+    //event.pageCount = Total number of pages
+  }
+
   // Extra methods
 
   deleteRandom() {
@@ -163,11 +191,26 @@ export class MainComponent  implements ngOnInit {
     });
   }
 
-  getCount() {
+  getCountDifficulty() {
     this.labWorkService.getCountLabWork(this.selectedDifficultyExtra.value).subscribe( data => {
       this.messageService.add({severity:'success', summary:'Результат', detail: 'Количество лабораторных, сложность которых выше ' + data});
       console.log(data)
     })
+  }
+
+  // Get count of all LabWorks
+  getLabWorkCount(): number {
+    let paramsModel = new ParamsModel(
+      this.nameFilter, this.coordinatesXFromFilter, this.coordinatesXUntilFiler,
+      this.coordinatesYFromFilter, this.coordinatesYUntilFilter, this.rangeDatesFilter, this.minimalPointFromFilter, this.minimalPointUntilFilter,
+      this.selectedDifficultiesFilter, this.selectedDisciplinesFilter, this.sortParam, null, null)
+
+
+    this.labWorkService.getAllLabWorks(paramsModel).subscribe( labWorkArray => {
+      this.countAll = labWorkArray.length
+    })
+
+    return this.countAll
   }
 
   // Filter
@@ -178,7 +221,7 @@ export class MainComponent  implements ngOnInit {
     let paramsModel = new ParamsModel(
       this.nameFilter, this.coordinatesXFromFilter, this.coordinatesXUntilFiler,
       this.coordinatesYFromFilter, this.coordinatesYUntilFilter, this.rangeDatesFilter, this.minimalPointFromFilter, this.minimalPointUntilFilter,
-      this.selectedDifficultiesFilter, this.selectedDisciplinesFilter, this.sortParam)
+      this.selectedDifficultiesFilter, this.selectedDisciplinesFilter, this.sortParam, this.pageFilter, this.countFilter)
 
     this.labWorkService.getAllLabWorks(paramsModel).subscribe(labWorkArray => {
       this.labWorkArray = labWorkArray;
@@ -187,6 +230,7 @@ export class MainComponent  implements ngOnInit {
   }
 
   saveFiltersToLocalStorage() {
+
     (this.nameFilter == null) ? localStorage.removeItem('nameFilter') : localStorage.setItem('nameFilter', this.nameFilter);
 
     (this.coordinatesXFromFilter == null) ? localStorage.removeItem('coordinatesXFromFilter') :
@@ -212,6 +256,7 @@ export class MainComponent  implements ngOnInit {
 
     (this.selectedDisciplinesFilter == null) ? localStorage.removeItem('selectedDisciplinesFilter') :
       localStorage.setItem('selectedDisciplinesFilter', this.selectedDisciplinesFilter);
+
   }
 
   resetFilters(): void {

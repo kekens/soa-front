@@ -60,6 +60,15 @@ export class LabWorkService {
   getParams(paramsModel: ParamsModel): HttpParams {
     let params = new HttpParams()
 
+    // Paging
+    if (paramsModel.page != null) {
+      params = params.append('page', paramsModel.page)
+    }
+
+    if (paramsModel.count != null) {
+      params = params.append('count', paramsModel.count)
+    }
+
     // Sort
     if (paramsModel.sort != null) {
       params = params.append('sort', paramsModel.sort)

@@ -54,7 +54,7 @@
           </p>
           <p-dropdown [options]="optionDifficulties" [(ngModel)]="selectedDifficultyExtra" placeholder="Выберите сложность" optionLabel="name"></p-dropdown>
           <ng-template pTemplate="footer">
-            <p-button icon="pi pi-check" (onClick)="getCount(); displayModal2=false" label="Отправить" styleClass="p-button-text"></p-button>
+            <p-button icon="pi pi-check" (onClick)="getCountDifficulty(); displayModal2=false" label="Отправить" styleClass="p-button-text"></p-button>
           </ng-template>
         </p-dialog>
 
@@ -242,6 +242,7 @@
         </div>
       </div>
     </div>
+    <p-paginator #paginator [pageLinkSize]="5" [rowsPerPageOptions]="[5, 10,20,30]" (onPageChange)="paginate($event)"></p-paginator>
   </div>
 </div>
 

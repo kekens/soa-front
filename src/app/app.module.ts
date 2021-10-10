@@ -18,6 +18,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import {DynamicDialogModule} from 'primeng/dynamicdialog';
+import { PaginatorModule } from 'primeng/paginator';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from "./header/header.component";
@@ -51,7 +52,8 @@ import {LabWorkDialogComponent} from "./labwork-dialog/labwork-dialog.component"
     ToastModule,
     ReactiveFormsModule,
     ConfirmDialogModule,
-    DynamicDialogModule
+    DynamicDialogModule,
+    PaginatorModule
   ],
   providers: [],
   bootstrap: [AppComponent]

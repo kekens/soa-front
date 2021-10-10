@@ -10,10 +10,12 @@ export class ParamsModel {
   selectedDifficulties: string[];
   selectedDisciplines: string[];
   sort: string;
+  page: number;
+  count: number;
 
   constructor(name: string, coordinatesXFrom: number, coordinatesXUntil: number, coordinatesYFrom: number, coordinatesYUntil: number,
               rangeDates: Date[], minimalPointFrom: number, minimalPointUntil: number, selectedDifficulties: string[],
-              selectedDisciplines: string[], sort: string) {
+              selectedDisciplines: string[], sort: string, page: number, count: number) {
     this.name = name;
     this.coordinatesXFrom = coordinatesXFrom;
     this.coordinatesXUntil = coordinatesXUntil;
@@ -25,5 +27,7 @@ export class ParamsModel {
     this.selectedDifficulties = selectedDifficulties;
     this.selectedDisciplines = selectedDisciplines;
     this.sort = sort;
+    this.page = page;
+    this.count = count;
   }
 }

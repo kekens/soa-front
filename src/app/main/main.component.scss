@@ -26,6 +26,10 @@ input {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+
+  p-paginator {
+    margin-top: 50px;
+  }
 }
 
 .content-subpart {
