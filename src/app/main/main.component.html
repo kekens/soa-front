@@ -182,13 +182,8 @@
 <!--      Filter discipline-->
       <p-overlayPanel #opDiscipline (onHide)="filterList()">
         <div class="op-content op-content-discipline">
-          <p class="overlay-header">Название</p>
           <p-dropdown [options]="optionDisciplines" [(ngModel)]="selectedDisciplinesFilter" placeholder="Выберите дисциплину"
                       optionLabel="name" optionValue="name"></p-dropdown>
-<!--          <p-multiSelect [options]="optionDisciplines" [(ngModel)]="selectedDisciplinesFilter" optionLabel="name" optionValue="name"></p-multiSelect>-->
-
-<!--          <p class="overlay-header">Кол-во часов</p>-->
-<!--          <p-inputNumber [(ngModel)]="lectureHours" mode="decimal" [min]="0"></p-inputNumber>-->
         </div>
       </p-overlayPanel>
       <button [ngClass]="{'overlay-button-filtered' : isDisciplineFiltered()}" pButton class="overlay-button" label="Дисциплина" icon="pi pi-chevron-down" iconPos="right" (click)="opDiscipline.toggle($event)"></button>
@@ -240,7 +235,7 @@
               {{lab.creationDate}}
             </p>
             <div class="item-buttons">
-              <button pButton pRipple type="button" icon="pi pi-pencil" class=" p-button-text"></button>
+              <button (click)="showDynamicDialog(lab);" pButton pRipple type="button" icon="pi pi-pencil" class=" p-button-text"></button>
               <button (click)="confirm(lab.name, lab.id)" pButton pRipple type="button" icon="pi pi-trash" class=" p-button-text"></button>
             </div>
           </div>

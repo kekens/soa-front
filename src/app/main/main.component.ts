@@ -5,22 +5,27 @@ import {LabWorkModel} from "../model/labwork.model";
 import {ParamsModel} from "../model/params.model";
 import {ConfirmationService, MenuItem, MessageService} from "primeng/api";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {CoordinatesModel} from "../model/coordinates.model";
+import {DialogService} from "primeng/dynamicdialog";
+import {LabWorkDialogComponent} from "../labwork-dialog/labwork-dialog.component";
 
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss'],
-  providers: [MessageService, ConfirmationService]
+  providers: [MessageService, ConfirmationService, DialogService]
 })
 export class MainComponent  implements ngOnInit {
 
+  // Form and labwork for creating
   formCreate: FormGroup;
   labWorkModel: LabWorkModel;
 
+  // ID for finding by ID
   idLab: number;
 
+  // LabWork array for getting results
   labWorkArray: LabWorkModel[];
+
   splitButtonItems: MenuItem[];
 
   displayModal1: boolean;
@@ -45,7 +50,7 @@ export class MainComponent  implements ngOnInit {
   sortParam: string = localStorage.getItem('sortParam');
 
   constructor(private labWorkService: LabWorkService, private messageService: MessageService,
-              private formBuilder: FormBuilder, private confirmationService: ConfirmationService) {
+              private formBuilder: FormBuilder, private confirmationService: ConfirmationService, private dialogService: DialogService) {
     this.splitButtonItems =[
       {
         label: 'Количество объектов по сложности', command: () => {
@@ -55,8 +60,8 @@ export class MainComponent  implements ngOnInit {
     ]
 
     this.optionDisciplines = [
-      { id: 1, name: 'soa' },
-      { id: 2, name: 'blps' }
+      { id: 1, name: 'soa', lectureHours: 100 },
+      { id: 2, name: 'blps', lectureHours: 88 }
     ]
 
     this.optionDifficulties = [
@@ -87,7 +92,11 @@ export class MainComponent  implements ngOnInit {
     this.filterList()
   }
 
+  // CRUD
+
   findLabWorkById(idLab: number) {
+    this.resetFilters()
+
     if (idLab != null) {
       this.labWorkService.getLabWork(idLab).subscribe(data => {
         console.log(data);
@@ -111,11 +120,8 @@ export class MainComponent  implements ngOnInit {
   }
 
   createLabWork() {
-    this.labWorkModel.name = this.formCreate.get('labName').value;
-    this.labWorkModel.coordinates = new CoordinatesModel(this.formCreate.get('labX').value, this.formCreate.get('labY').value);
-    this.labWorkModel.minimalPoint = this.formCreate.get('labMinimalPoint').value;
-    this.labWorkModel.difficulty = this.formCreate.get('labDifficulty').value;
-    this.labWorkModel.discipline = this.formCreate.get('labDiscipline').value;
+
+    this.labWorkModel = this.labWorkService.getLabWorkFromForm(this.formCreate)
 
     this.labWorkService.addLabWork(this.labWorkModel).subscribe( data => {
       console.log('LabWork added');
@@ -124,6 +130,47 @@ export class MainComponent  implements ngOnInit {
       this.printErrors(error)
     })
   }
+
+  // Update
+
+  showDynamicDialog(labWork: LabWorkModel) {
+    console.log(labWork.discipline)
+    const ref = this.dialogService.open(LabWorkDialogComponent, {
+      header: 'Изменить лабораторную работу' + labWork.id,
+      width: '30%',
+      dismissableMask: 'true',
+      closeOnEscape: 'true',
+      data: {
+        id: labWork.id,
+        name: labWork.name,
+        coordinates: labWork.coordinates,
+        minimalPoint: labWork.minimalPoint,
+        difficulty: labWork.difficulty,
+        discipline: labWork.discipline
+      }
+    });
+
+    ref.onClose.subscribe(data => {
+      this.refresh()
+    });
+  }
+
+  // Extra methods
+
+  deleteRandom() {
+    this.labWorkService.deleteRandomLabWork(this.selectedDifficultyExtra.value).subscribe(error => {
+      console.log(error)
+    });
+  }
+
+  getCount() {
+    this.labWorkService.getCountLabWork(this.selectedDifficultyExtra.value).subscribe( data => {
+      this.messageService.add({severity:'success', summary:'Результат', detail: 'Количество лабораторных, сложность которых выше ' + data});
+      console.log(data)
+    })
+  }
+
+  // Filter
 
   filterList() {
     this.saveFiltersToLocalStorage();
@@ -167,27 +214,6 @@ export class MainComponent  implements ngOnInit {
       localStorage.setItem('selectedDisciplinesFilter', this.selectedDisciplinesFilter);
   }
 
-  refresh(): void {
-    window.location.reload();
-  }
-
-  printErrors(error: any) {
-    for (let er of error.error) {
-      this.messageService.add({severity:'error', summary:'Ошибка', detail: er['message']});
-    }
-  }
-
-  confirm(name: string, id: number) {
-    this.confirmationService.confirm({
-      message: 'Вы действительно хотите удалить лабу ' + name,
-      header: 'Подтверждение',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.deleteLabWorkById(id);
-      }
-    });
-  }
-
   resetFilters(): void {
     this.nameFilter = null;
     this.coordinatesXFromFilter = null;
@@ -212,18 +238,6 @@ export class MainComponent  implements ngOnInit {
     localStorage.removeItem('selectedDisciplinesFilter');
   }
 
-  deleteRandom() {
-    this.labWorkService.deleteRandomLabWork(this.selectedDifficultyExtra.value).subscribe(error => {
-      console.log(error)
-    });
-  }
-
-  getCount() {
-    this.labWorkService.getCountLabWork(this.selectedDifficultyExtra.value).subscribe( data => {
-      this.messageService.add({severity:'success', summary:'Результат', detail: 'Количество лабораторных, сложность которых выше ' + data});
-      console.log(data)
-    })
-  }
 
   isCoordinatesFiltered(): boolean {
     return this.coordinatesXFromFilter != null || this.coordinatesXUntilFiler != null || this.coordinatesYUntilFilter != null || this.coordinatesYFromFilter != null;
@@ -235,6 +249,27 @@ export class MainComponent  implements ngOnInit {
 
   isDisciplineFiltered(): boolean {
     return (this.selectedDisciplinesFilter != '' && this.selectedDisciplinesFilter != null) || this.lectureHours != null;
+  }
+
+  refresh(): void {
+    window.location.reload();
+  }
+
+  printErrors(error: any) {
+    for (let er of error.error) {
+      this.messageService.add({severity:'error', summary:'Ошибка', detail: er['message']});
+    }
+  }
+
+  confirm(name: string, id: number) {
+    this.confirmationService.confirm({
+      message: 'Вы действительно хотите удалить лабу ' + name,
+      header: 'Подтверждение',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.deleteLabWorkById(id);
+      }
+    });
   }
 
   showModalDialog1() {

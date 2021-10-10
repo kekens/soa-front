@@ -1,0 +1,48 @@
+#container {
+  display: flex;
+  flex-direction: column;
+
+  ::ng-deep .p-dropdown {
+    margin-top: 20px;
+    width: 300px;
+  }
+
+  ::ng-deep .p-dropdown-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 20px;
+  }
+
+}
+
+.dialog-input-div {
+  display: flex;
+  flex-direction: column;
+  justify-items: flex-start !important;
+  align-items: flex-start !important;
+  width: 100%;
+  //border: 2px solid red;
+  margin: 18px 0;
+
+  * {
+    //border: 2px solid green;
+  }
+}
+
+.dialog-text-input {
+  color: black;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.dialog-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+}
+
+input {
+  text-align: left;
+}

@@ -1,0 +1,47 @@
+<div id="container">
+
+<p class="dialog-text">
+  Заполните поля и нажмите кнопку изменить
+</p>
+<form [formGroup]="formUpdate" novalidate (ngSubmit)="updateLabWork()">
+  <div class="dialog-input-div">
+    <p class="dialog-text dialog-text-input">
+      Имя
+    </p>
+    <input type="text" pInputText formControlName="labName"/>
+  </div>
+  <div class="dialog-input-div">
+    <p class="dialog-text dialog-text-input">
+      Координаты
+    </p>
+    <div>
+      <p-inputNumber formControlName="labX" mode="decimal"></p-inputNumber>
+      <p-inputNumber [ngStyle]="{'margin-left': '10px'}" formControlName="labY" mode="decimal"></p-inputNumber>
+    </div>
+  </div>
+  <div class="dialog-input-div">
+    <p class="dialog-text dialog-text-input">
+      Минимальная оценка
+    </p>
+    <p-inputNumber formControlName="labMinimalPoint" mode="decimal"></p-inputNumber>
+  </div>
+  <div class="dialog-input-div">
+    <p class="dialog-text dialog-text-input">
+      Сложность
+    </p>
+    <p-dropdown [options]="optionDifficulties" formControlName="labDifficulty" placeholder="Выберите сложность" optionLabel="name" optionValue="value"></p-dropdown>
+  </div>
+  <div class="dialog-input-div">
+    <p class="dialog-text dialog-text-input">
+      Дисциплина
+    </p>
+    <p-dropdown [options]="optionDisciplines" placeholder="Выберите дисциплину" formControlName="labDiscipline" optionLabel="name"></p-dropdown>
+  </div>
+
+  <p-button icon="pi pi-check " [disabled]="formUpdate.invalid" label="Изменить" type="submit" styleClass="p-button-text"></p-button>
+</form>
+
+</div>
+
+<p-toast position="top-right" [baseZIndex]="30000">
+</p-toast>

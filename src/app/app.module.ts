@@ -17,16 +17,19 @@ import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import {DynamicDialogModule} from 'primeng/dynamicdialog';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from "./header/header.component";
 import { MainComponent } from "./main/main.component";
+import {LabWorkDialogComponent} from "./labwork-dialog/labwork-dialog.component";
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    MainComponent
+    MainComponent,
+    LabWorkDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +50,8 @@ import { MainComponent } from "./main/main.component";
     DropdownModule,
     ToastModule,
     ReactiveFormsModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    DynamicDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]

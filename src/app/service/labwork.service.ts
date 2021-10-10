@@ -1,10 +1,12 @@
+// @ts-nocheck
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs";
 import {LabWorkModel} from "../model/labwork.model";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {ParamsModel} from "../model/params.model";
 import {formatDate} from "@angular/common";
-import {IntegrityError} from "../model/error.model";
+import {FormGroup} from "@angular/forms";
+import {CoordinatesModel} from "../model/coordinates.model";
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +17,10 @@ export class LabWorkService {
   constructor(private httpClient: HttpClient) {
   }
 
-  addLabWork(labWorkModel: LabWorkModel): Observable<IntegrityError> {
-    return this.httpClient.post<IntegrityError>(this.url, labWorkModel);
+  // CRUD
+
+  addLabWork(labWorkModel: LabWorkModel){
+    return this.httpClient.post(this.url, labWorkModel);
   }
 
   getLabWork(id: number): Observable<LabWorkModel> {
@@ -26,6 +30,12 @@ export class LabWorkService {
   deleteLabWork(id: number) {
     return this.httpClient.delete(this.url + '/' + id);
   }
+
+  updateLabWork(labWorkModel: LabWorkModel) {
+    return this.httpClient.put(this.url, labWorkModel);
+  }
+
+  // Extra methods
 
   getAllLabWorks(paramsModel?: ParamsModel): Observable<Array<LabWorkModel>> {
     if (paramsModel != null) {
@@ -44,6 +54,8 @@ export class LabWorkService {
   getCountLabWork(difficulty: string): Observable<string> {
     return this.httpClient.get<string>(this.url+'/difficulty/count?difficulty=' + difficulty);
   }
+
+  // Get params for filtering
 
   getParams(paramsModel: ParamsModel): HttpParams {
     let params = new HttpParams()
@@ -112,6 +124,16 @@ export class LabWorkService {
     }
 
     return params;
+  }
+
+  getLabWorkFromForm(form: FormGroup): LabWorkModel {
+    return {
+      name: form.get('labName').value,
+      coordinates: new CoordinatesModel(form.get('labX').value, form.get('labY').value),
+      minimalPoint: form.get('labMinimalPoint').value,
+      difficulty: form.get('labDifficulty').value,
+      discipline: form.get('labDiscipline').value,
+    };
   }
 
 }
