@@ -3,9 +3,38 @@
   <div class="content-part content-title">
     <div class="content-subpart content-subpart-title">
       <div class="content-subpart-title-text">
-        Лабораторные работы <p class="text-count" >[{{labWorks? labWorks.length : '0'}}]</p>
+        Лабораторные работы <p class="text-count" >[{{labWorkArray? labWorkArray.length : '0'}}]</p>
+
+        <!--        Search by id-->
+        <p-inputNumber class="input-search-id" [min]="0" (keydown.enter)="findLabWorkById(idLab);" placeholder="Введите ID" [(ngModel)]="idLab" mode="decimal" [useGrouping]="false">
+        </p-inputNumber>
       </div>
       <div class="content-subpart-title-buttons">
+
+        <!--        Sort options-->
+        <p-overlayPanel class="op-sort" #opSort>
+          <div class="op-content op-content-sort">
+            <button [ngClass]="{'button-sort-selected' : (sortParam=='name' )}" (click)="sortParam='name'; filterList()" pButton pRipple type="button"
+                    label="По имени" class="p-button-text button-sort"></button>
+
+            <button [ngClass]="{'button-sort-selected' : (sortParam=='coordinates_x' )}" (click)="sortParam='coordinates_x'; filterList()" pButton pRipple type="button"
+                    label="По координате X" class="p-button-text button-sort"></button>
+
+            <button [ngClass]="{'button-sort-selected' : (sortParam=='coordinates_y' )}" (click)="sortParam='coordinates_y'; filterList()" pButton pRipple type="button"
+                    label="По координате Y" class="p-button-text button-sort"></button>
+
+            <button [ngClass]="{'button-sort-selected' : (sortParam=='minimalPoint' )}" (click)="sortParam='minimalPoint'; filterList()" pButton pRipple type="button"
+                    label="По мин. оценке" class="p-button-text button-sort"></button>
+
+            <button [ngClass]="{'button-sort-selected' : (sortParam=='difficulty' )}" (click)="sortParam='difficulty'; filterList()" pButton pRipple type="button"
+                    label="По сложности" class="p-button-text button-sort"></button>
+
+            <button [ngClass]="{'button-sort-selected' : (sortParam=='discipline_name' )}" (click)="sortParam='discipline_name'; filterList()" pButton pRipple type="button"
+                    label="По дисциплине" class="p-button-text button-sort"></button>
+          </div>
+        </p-overlayPanel>
+        <button (click)="opSort.toggle($event)" [ngClass]="{'button-menu-selected' : (sortParam != null )}" pButton pRipple type="button"
+                icon="pi pi-ellipsis-v" class=" p-button-text button-menu"></button>
         <!--  Dialogs for extra actions-->
         <p-dialog header="Удалить случайный объект заданной сложности" [dismissableMask]="true" [(visible)]="displayModal1" [modal]="true"
                   [style]="{width: '40vw', top: '-180px'}" [draggable]="false" [resizable]="false">
@@ -49,8 +78,8 @@
                 Координаты
               </p>
               <div>
-                <p-inputNumber style="margin-right: 10px;" formControlName="labX" mode="decimal"></p-inputNumber>
-                <p-inputNumber formControlName="labY" mode="decimal"></p-inputNumber>
+                <p-inputNumber formControlName="labX" mode="decimal"></p-inputNumber>
+                <p-inputNumber [ngStyle]="{'margin-left': '10px'}" formControlName="labY" mode="decimal"></p-inputNumber>
               </div>
             </div>
             <div class="dialog-input-div">
@@ -80,30 +109,6 @@
 
         <button (click)="showModalDialogCreate()" pButton pRipple type="button" icon="pi pi-plus" class=" p-button-text button-menu"></button>
 
-<!--        Sort options-->
-        <p-overlayPanel class="op-sort" #opSort>
-          <div class="op-content op-content-sort">
-            <button [ngClass]="{'button-sort-selected' : (sortParam=='name' )}" (click)="sortParam='name'; filterList()" pButton pRipple type="button"
-                    label="По имени" class="p-button-text button-sort"></button>
-
-            <button [ngClass]="{'button-sort-selected' : (sortParam=='coordinates_x' )}" (click)="sortParam='coordinates_x'; filterList()" pButton pRipple type="button"
-                    label="По координате X" class="p-button-text button-sort"></button>
-
-            <button [ngClass]="{'button-sort-selected' : (sortParam=='coordinates_y' )}" (click)="sortParam='coordinates_y'; filterList()" pButton pRipple type="button"
-                    label="По координате Y" class="p-button-text button-sort"></button>
-
-            <button [ngClass]="{'button-sort-selected' : (sortParam=='minimalPoint' )}" (click)="sortParam='minimalPoint'; filterList()" pButton pRipple type="button"
-                    label="По мин. оценку" class="p-button-text button-sort"></button>
-
-            <button [ngClass]="{'button-sort-selected' : (sortParam=='difficulty' )}" (click)="sortParam='difficulty'; filterList()" pButton pRipple type="button"
-                    label="По сложности" class="p-button-text button-sort"></button>
-
-            <button [ngClass]="{'button-sort-selected' : (sortParam=='discipline_name' )}" (click)="sortParam='discipline_name'; filterList()" pButton pRipple type="button"
-                    label="По дисциплине" class="p-button-text button-sort"></button>
-          </div>
-        </p-overlayPanel>
-        <button (click)="opSort.toggle($event)" [ngClass]="{'button-menu-selected' : (sortParam != null )}" pButton pRipple type="button"
-                icon="pi pi-ellipsis-v" class=" p-button-text button-menu"></button>
       </div>
     </div>
   </div>
@@ -178,7 +183,9 @@
       <p-overlayPanel #opDiscipline (onHide)="filterList()">
         <div class="op-content op-content-discipline">
           <p class="overlay-header">Название</p>
-          <p-multiSelect [options]="optionDisciplines" [(ngModel)]="selectedDisciplinesFilter" optionLabel="name" optionValue="id"></p-multiSelect>
+          <p-dropdown [options]="optionDisciplines" [(ngModel)]="selectedDisciplinesFilter" placeholder="Выберите дисциплину"
+                      optionLabel="name" optionValue="name"></p-dropdown>
+<!--          <p-multiSelect [options]="optionDisciplines" [(ngModel)]="selectedDisciplinesFilter" optionLabel="name" optionValue="name"></p-multiSelect>-->
 
 <!--          <p class="overlay-header">Кол-во часов</p>-->
 <!--          <p-inputNumber [(ngModel)]="lectureHours" mode="decimal" [min]="0"></p-inputNumber>-->
@@ -194,7 +201,7 @@
       <button (click)="resetFilters(); filterList()" pButton pRipple type="button" label="Очистить фильтры" class="p-button-text"></button>
     </div>
     <div class="content-subpart content-collection-list">
-      <div class="labwork-content" *ngFor="let lab of labWorks">
+      <div class="labwork-content" *ngFor="let lab of labWorkArray">
         <div class="labwork-content-id">
           <p>
             {{ lab.id }}
@@ -232,12 +239,18 @@
             <p>
               {{lab.creationDate}}
             </p>
+            <div class="item-buttons">
+              <button pButton pRipple type="button" icon="pi pi-pencil" class=" p-button-text"></button>
+              <button (click)="confirm(lab.name, lab.id)" pButton pRipple type="button" icon="pi pi-trash" class=" p-button-text"></button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<p-confirmDialog [style]="{width: '50vw'}" acceptLabel='Да' rejectLabel='Нет' [dismissableMask]="true" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
 
 <p-toast position="top-right" [baseZIndex]="20000">
 </p-toast>

@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ButtonModule } from "primeng/button";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from "primeng/calendar";
 import { SliderModule } from 'primeng/slider';
@@ -16,6 +16,7 @@ import { SplitButtonModule } from 'primeng/splitbutton';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from "./header/header.component";
@@ -45,7 +46,8 @@ import { MainComponent } from "./main/main.component";
     DialogModule,
     DropdownModule,
     ToastModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ConfirmDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -143,6 +143,17 @@ input {
   }
 }
 
+.input-search-id {
+  margin-left: 24px;
+
+  ::ng-deep .p-inputtext {
+    width: 200px;
+    height: 38px;
+    border: 1px solid black;
+
+  }
+}
+
 .button-sort {
   width: 100%;
   height: 50px;
@@ -317,7 +328,7 @@ p-checkbox {
 }
 
 .op-content-discipline {
-  ::ng-deep .p-inputnumber-input {
+  ::ng-deep .p-dropdown {
     width: 240px;
   }
 }
@@ -477,6 +488,34 @@ p-checkbox {
 
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+
+  .item-buttons {
+    height: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+
+    button {
+      width: 40%;
+      height: 80%;
+      margin: 8px 14px;
+    }
+
+    button:hover {
+      background: transparent;
+      ::ng-deep .p-button-icon {
+        color: cyan;
+      }
+    }
+
+    ::ng-deep .p-button-icon {
+      color: black;
+      font-size: 48px;
+      transition: 0.5s;
+    }
+
+  }
 
   p {
     padding: 6px 6px;
@@ -491,3 +530,6 @@ p-checkbox {
   }
 }
 
+::ng-deep .p-confirm-dialog-message {
+  font-size: 20px;
+}

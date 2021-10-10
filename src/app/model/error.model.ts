@@ -1,5 +1,5 @@
 // @ts-nocheck
-export class IntegrityErrorModel {
+export class IntegrityError {
   code: number;
   message: string;
 }

@@ -4,7 +4,7 @@ import {LabWorkModel} from "../model/labwork.model";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {ParamsModel} from "../model/params.model";
 import {formatDate} from "@angular/common";
-import {IntegrityErrorModel} from "../model/error.model";
+import {IntegrityError} from "../model/error.model";
 
 @Injectable({
   providedIn: 'root'
@@ -15,12 +15,21 @@ export class LabWorkService {
   constructor(private httpClient: HttpClient) {
   }
 
-  addLabWork(labWorkModel: LabWorkModel): Observable<IntegrityErrorModel> {
-    return this.httpClient.post<IntegrityErrorModel>(this.url, labWorkModel);
+  addLabWork(labWorkModel: LabWorkModel): Observable<IntegrityError> {
+    return this.httpClient.post<IntegrityError>(this.url, labWorkModel);
+  }
+
+  getLabWork(id: number): Observable<LabWorkModel> {
+    return this.httpClient.get<LabWorkModel>(this.url + '/' + id);
+  }
+
+  deleteLabWork(id: number) {
+    return this.httpClient.delete(this.url + '/' + id);
   }
 
   getAllLabWorks(paramsModel?: ParamsModel): Observable<Array<LabWorkModel>> {
     if (paramsModel != null) {
+      console.log(paramsModel)
       let params = this.getParams(paramsModel)
       return this.httpClient.get<Array<LabWorkModel>>(this.url, { params });
     } else {
@@ -33,14 +42,11 @@ export class LabWorkService {
   }
 
   getCountLabWork(difficulty: string): Observable<string> {
-    console.log(difficulty)
     return this.httpClient.get<string>(this.url+'/difficulty/count?difficulty=' + difficulty);
   }
 
   getParams(paramsModel: ParamsModel): HttpParams {
     let params = new HttpParams()
-
-    console.log(paramsModel)
 
     // Sort
     if (paramsModel.sort != null) {
@@ -101,7 +107,7 @@ export class LabWorkService {
     // Discipline
     if (paramsModel.selectedDisciplines != null) {
       for (let disc of paramsModel.selectedDisciplines) {
-        params = params.append('discipline_name', disc);
+        params = params.append('disciplineName', disc);
       }
     }
 
