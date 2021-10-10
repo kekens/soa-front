@@ -8,13 +8,12 @@ export class ParamsModel {
   minimalPointFrom: number;
   minimalPointUntil: number;
   selectedDifficulties: string[];
-  disciplines: string[];
   selectedDisciplines: string[];
-  lectureHours: number;
+  sort: string;
 
   constructor(name: string, coordinatesXFrom: number, coordinatesXUntil: number, coordinatesYFrom: number, coordinatesYUntil: number,
-              rangeDates: Date[], minimalPointFrom: number, minimalPointUntil: number, selectedDifficulties: string[], disciplines: string[],
-              selectedDisciplines: string[], lectureHours: number) {
+              rangeDates: Date[], minimalPointFrom: number, minimalPointUntil: number, selectedDifficulties: string[],
+              selectedDisciplines: string[], sort: string) {
     this.name = name;
     this.coordinatesXFrom = coordinatesXFrom;
     this.coordinatesXUntil = coordinatesXUntil;
@@ -24,8 +23,7 @@ export class ParamsModel {
     this.minimalPointFrom = minimalPointFrom;
     this.minimalPointUntil = minimalPointUntil;
     this.selectedDifficulties = selectedDifficulties;
-    this.disciplines = disciplines;
     this.selectedDisciplines = selectedDisciplines;
-    this.lectureHours = lectureHours;
+    this.sort = sort;
   }
 }

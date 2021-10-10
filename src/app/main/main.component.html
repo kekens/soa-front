@@ -1,6 +1,5 @@
 <div id="content">
 
-
   <div class="content-part content-title">
     <div class="content-subpart content-subpart-title">
       <div class="content-subpart-title-text">
@@ -30,11 +29,11 @@
           </ng-template>
         </p-dialog>
 
-        <p-splitButton (onClick)="showModalDialog1()" label="Удалить объект по сложности" [model]="splitButtonItems" class="button-split"></p-splitButton>
+        <p-splitButton (onClick)="showModalDialog1()" label="Удалить объект" [model]="splitButtonItems" class="button-split"></p-splitButton>
 
         <!--Create dialog-->
         <p-dialog header="Добавить лабораторную работу" [dismissableMask]="true" [(visible)]="displayModalCreate" [modal]="true"
-                  [style]="{width: '40vw'}" [draggable]="false" [resizable]="false">
+                  [style]="{width: '30vw'}" [draggable]="false" [resizable]="false">
           <p class="dialog-text">
             Заполните поля и нажмите кнопку добавить
           </p>
@@ -79,7 +78,32 @@
           </form>
         </p-dialog>
 
-        <button (click)="showModalDialogCreate()" pButton pRipple type="button" icon="pi pi-plus" class=" p-button-text button-add"></button>
+        <button (click)="showModalDialogCreate()" pButton pRipple type="button" icon="pi pi-plus" class=" p-button-text button-menu"></button>
+
+<!--        Sort options-->
+        <p-overlayPanel class="op-sort" #opSort>
+          <div class="op-content op-content-sort">
+            <button [ngClass]="{'button-sort-selected' : (sortParam=='name' )}" (click)="sortParam='name'; filterList()" pButton pRipple type="button"
+                    label="По имени" class="p-button-text button-sort"></button>
+
+            <button [ngClass]="{'button-sort-selected' : (sortParam=='coordinates_x' )}" (click)="sortParam='coordinates_x'; filterList()" pButton pRipple type="button"
+                    label="По координате X" class="p-button-text button-sort"></button>
+
+            <button [ngClass]="{'button-sort-selected' : (sortParam=='coordinates_y' )}" (click)="sortParam='coordinates_y'; filterList()" pButton pRipple type="button"
+                    label="По координате Y" class="p-button-text button-sort"></button>
+
+            <button [ngClass]="{'button-sort-selected' : (sortParam=='minimalPoint' )}" (click)="sortParam='minimalPoint'; filterList()" pButton pRipple type="button"
+                    label="По мин. оценку" class="p-button-text button-sort"></button>
+
+            <button [ngClass]="{'button-sort-selected' : (sortParam=='difficulty' )}" (click)="sortParam='difficulty'; filterList()" pButton pRipple type="button"
+                    label="По сложности" class="p-button-text button-sort"></button>
+
+            <button [ngClass]="{'button-sort-selected' : (sortParam=='discipline_name' )}" (click)="sortParam='discipline_name'; filterList()" pButton pRipple type="button"
+                    label="По дисциплине" class="p-button-text button-sort"></button>
+          </div>
+        </p-overlayPanel>
+        <button (click)="opSort.toggle($event)" [ngClass]="{'button-menu-selected' : (sortParam != null )}" pButton pRipple type="button"
+                icon="pi pi-ellipsis-v" class=" p-button-text button-menu"></button>
       </div>
     </div>
   </div>
@@ -90,11 +114,11 @@
 <!--      Filter name-->
       <p-overlayPanel #opName (onHide)="filterList()">
         <div class="op-content">
-          <input type="text" pInputText [(ngModel)]="name"/>
+          <input type="text" pInputText [(ngModel)]="nameFilter"/>
           <small id="username-help">Введите шаблон имени</small>
         </div>
       </p-overlayPanel>
-      <button [ngClass]="{'overlay-button-filtered' : (name != '' && name != null)}" pButton class="overlay-button" label="Имя " icon="pi pi-chevron-down" iconPos="right" (click)="opName.toggle($event)"></button>
+      <button [ngClass]="{'overlay-button-filtered' : (nameFilter != '' && nameFilter != null)}" pButton class="overlay-button" label="Имя " icon="pi pi-chevron-down" iconPos="right" (click)="opName.toggle($event)"></button>
 
 <!--      Filter coordinates-->
       <p-overlayPanel #opCoordinates (onHide)="filterList()">
@@ -102,17 +126,17 @@
           <p class="overlay-header">Координата X</p>
           <div class="op-content op-content-row op-content-row-coordinates">
             <p>От</p>
-            <p-inputNumber [(ngModel)]="coordinatesXFrom" mode="decimal"></p-inputNumber>
+            <p-inputNumber [(ngModel)]="coordinatesXFromFilter" mode="decimal"></p-inputNumber>
             <p>До</p>
-            <p-inputNumber [(ngModel)]="coordinatesXUntil" mode="decimal" [min]="coordinatesXFrom"></p-inputNumber>
+            <p-inputNumber [(ngModel)]="coordinatesXUntilFiler" mode="decimal" [min]="coordinatesXFromFilter"></p-inputNumber>
           </div>
 
           <p class="overlay-header">Координата Y</p>
           <div class="op-content op-content-row op-content-row-coordinates">
             <p>От</p>
-            <p-inputNumber [(ngModel)]="coordinatesYFrom" mode="decimal" [min]="-895"></p-inputNumber>
+            <p-inputNumber [(ngModel)]="coordinatesYFromFilter" mode="decimal" [min]="-895"></p-inputNumber>
             <p>До</p>
-            <p-inputNumber [(ngModel)]="coordinatesYUntil" mode="decimal" [min]="coordinatesYFrom"></p-inputNumber>
+            <p-inputNumber [(ngModel)]="coordinatesYUntilFilter" mode="decimal" [min]="coordinatesYFromFilter"></p-inputNumber>
           </div>
         </div>
       </p-overlayPanel>
@@ -122,20 +146,20 @@
       <p-overlayPanel #opCreationDate (onHide)="filterList()">
         <div class="op-content">
           <div class="op-content op-content-row op-content-row-creation-date">
-            <p-calendar [(ngModel)]="rangeDates" [showIcon]="true" selectionMode="range" dateFormat="dd-mm-yy">
+            <p-calendar [(ngModel)]="rangeDatesFilter" [showIcon]="true" selectionMode="range" dateFormat="dd-mm-yy">
             </p-calendar>
           </div>
         </div>
       </p-overlayPanel>
-      <button [ngClass]="{'overlay-button-filtered' : rangeDates != null}" pButton class="overlay-button" label="Дата создания" icon="pi pi-chevron-down" iconPos="right" (click)="opCreationDate.toggle($event)"></button>
+      <button [ngClass]="{'overlay-button-filtered' : rangeDatesFilter != null}" pButton class="overlay-button" label="Дата создания" icon="pi pi-chevron-down" iconPos="right" (click)="opCreationDate.toggle($event)"></button>
 
 <!--      Filer minimal point-->
       <p-overlayPanel #opMinimalPoint (onHide)="filterList()">
         <div class="op-content op-content-row op-content-row-coordinates">
           <p>От</p>
-          <p-inputNumber [(ngModel)]="minimalPointFrom" mode="decimal" [min]="1"></p-inputNumber>
+          <p-inputNumber [(ngModel)]="minimalPointFromFilter" mode="decimal" [min]="1"></p-inputNumber>
           <p>До</p>
-          <p-inputNumber [(ngModel)]="minimalPointUntil" mode="decimal" [min]="minimalPointFrom"></p-inputNumber>
+          <p-inputNumber [(ngModel)]="minimalPointUntilFilter" mode="decimal" [min]="minimalPointFromFilter"></p-inputNumber>
         </div>
       </p-overlayPanel>
       <button [ngClass]="{'overlay-button-filtered' : isMinimalPointFiltered()}" pButton class="overlay-button" label="Минимальная оценка" icon="pi pi-chevron-down" iconPos="right" (click)="opMinimalPoint.toggle($event)"></button>
@@ -143,18 +167,18 @@
 <!--      Filter difficulty-->
       <p-overlayPanel #opDifficulty (onHide)="filterList()">
         <div class="op-content">
-          <p-checkbox name="groupname" label="Легко" value="VERY_EASY" [(ngModel)]="selectedDifficulties"></p-checkbox>
-          <p-checkbox name="groupname" label="Нормально" value="NORMAL" [(ngModel)]="selectedDifficulties"></p-checkbox>
-          <p-checkbox name="groupname" label="Невозможно" value="IMPOSSIBLE" [(ngModel)]="selectedDifficulties"></p-checkbox>
+          <p-checkbox name="groupname" label="Легко" value="VERY_EASY" [(ngModel)]="selectedDifficultiesFilter"></p-checkbox>
+          <p-checkbox name="groupname" label="Нормально" value="NORMAL" [(ngModel)]="selectedDifficultiesFilter"></p-checkbox>
+          <p-checkbox name="groupname" label="Невозможно" value="IMPOSSIBLE" [(ngModel)]="selectedDifficultiesFilter"></p-checkbox>
         </div>
       </p-overlayPanel>
-      <button [ngClass]="{'overlay-button-filtered' : selectedDifficulties != null}" pButton class="overlay-button" label="Сложность" icon="pi pi-chevron-down" iconPos="right" (click)="opDifficulty.toggle($event)"></button>
+      <button [ngClass]="{'overlay-button-filtered' : selectedDifficultiesFilter != null}" pButton class="overlay-button" label="Сложность" icon="pi pi-chevron-down" iconPos="right" (click)="opDifficulty.toggle($event)"></button>
 
 <!--      Filter discipline-->
       <p-overlayPanel #opDiscipline (onHide)="filterList()">
         <div class="op-content op-content-discipline">
           <p class="overlay-header">Название</p>
-          <p-multiSelect [options]="optionDisciplines" [(ngModel)]="selectedDisciplines" optionLabel="name" optionValue="id"></p-multiSelect>
+          <p-multiSelect [options]="optionDisciplines" [(ngModel)]="selectedDisciplinesFilter" optionLabel="name" optionValue="id"></p-multiSelect>
 
 <!--          <p class="overlay-header">Кол-во часов</p>-->
 <!--          <p-inputNumber [(ngModel)]="lectureHours" mode="decimal" [min]="0"></p-inputNumber>-->
@@ -165,7 +189,10 @@
     </div>
   </div>
 
-  <div class="content-part content-collection">
+  <div class="content-part content-part-collection">
+    <div class="content-subpart content-collection-reset">
+      <button (click)="resetFilters(); filterList()" pButton pRipple type="button" label="Очистить фильтры" class="p-button-text"></button>
+    </div>
     <div class="content-subpart content-collection-list">
       <div class="labwork-content" *ngFor="let lab of labWorks">
         <div class="labwork-content-id">

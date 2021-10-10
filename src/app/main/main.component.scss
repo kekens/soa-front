@@ -3,7 +3,7 @@ $content-subpart-width: 85%;
 #content {
   height: 93%;
   display: grid;
-  grid-template-rows: 15% 8% auto;
+  grid-template-rows: 18% 8% auto;
   justify-items: center;
 }
 
@@ -16,6 +16,16 @@ input {
   justify-content: center;
   width: 100%;
   //border: 3px solid blue;
+
+  > div {
+    //border: 3px solid red;
+  }
+}
+
+.content-part-collection {
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .content-subpart {
@@ -26,6 +36,29 @@ input {
 
   div {
     //border: 3px solid red;
+  }
+}
+
+.content-collection-reset {
+  height: 55px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-end;
+  padding-bottom: 6px;
+  padding-left: 10px;
+
+  button {
+    text-decoration-line: underline;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    color: black;
+    background: white;
+  }
+
+  button:hover {
+    color:white;
+    background: black;
   }
 }
 
@@ -55,7 +88,7 @@ input {
 .content-subpart-title-buttons {
   justify-content: flex-end;
 
-  .button-add {
+  .button-menu {
     //margin-left: 40px;
     color: black;
     width: 100px;
@@ -67,11 +100,17 @@ input {
     }
   }
 
+  .button-menu-selected {
+    ::ng-deep .p-button-icon {
+      font-weight: 600;
+    }
+  }
+
   .button-split {
     ::ng-deep {
       .p-splitbutton {
         height: 80px;
-        width: 700px;
+        width: 400px;
 
         button {
           background: transparent;
@@ -102,6 +141,29 @@ input {
       }
     }
   }
+}
+
+.button-sort {
+  width: 100%;
+  height: 50px;
+  color: black;
+  background: white;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px;
+  text-align: left !important;
+  margin-bottom: 20px;
+}
+
+.button-sort:hover {
+  background: white !important;
+  color: black !important;
+  box-shadow: 1px 1px 10px 0 black;
+  //font-weight: 600 !important;
+}
+
+.button-sort-selected {
+  text-decoration-line: underline;
+  font-weight: 600;
 }
 
 p-dialog {
@@ -155,7 +217,7 @@ p-dialog {
   font-size: 20px;
 }
 
-.button-add:hover {
+.button-menu:hover {
   background: #ebebeb !important;
 }
 
@@ -209,6 +271,17 @@ p-dialog {
   border-left: 2px solid black;
   border-right: 2px solid black;
   border-bottom: 2px solid black;
+}
+
+.op-sort {
+
+
+  ::ng-deep .p-overlaypanel-content {
+    width: 200px !important;
+  }
+}
+
+.op-content-sort {
 }
 
 .op-content-row {

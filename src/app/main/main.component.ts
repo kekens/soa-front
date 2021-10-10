@@ -26,24 +26,31 @@ export class MainComponent  implements ngOnInit {
   displayModalCreate: boolean;
 
   selectedDifficultyExtra: Difficulty;
-  optionDifficulties: Difficulty[];
 
+  optionDifficulties: Difficulty[];
   optionDisciplines: Discipline[];
 
-  name: string = null;
-  coordinatesXFrom: number = null;
-  coordinatesXUntil: number = null;
-  coordinatesYFrom: number = null;
-  coordinatesYUntil: number = null;
-  rangeDates: Date[] = null;
-  minimalPointFrom: number = null;
-  minimalPointUntil: number = null;
-  selectedDifficulties: string[] = null;
-  disciplines: string[] = null;
-  selectedDisciplines: string[] = null;
-  lectureHours: number = null;
+  nameFilter: string = localStorage.getItem('nameFilter');
+  coordinatesXFromFilter: number = localStorage.getItem('coordinatesXFromFilter');
+  coordinatesXUntilFiler: number = localStorage.getItem('coordinatesXUntilFilter');
+  coordinatesYFromFilter: number = localStorage.getItem('coordinatesYFromFilter');
+  coordinatesYUntilFilter: number = localStorage.getItem('coordinatesYUntilFilter');
+  rangeDatesFilter: Date[] = localStorage.getItem('rangeDatesFilter');
+  minimalPointFromFilter: number = localStorage.getItem('minimalPointFromFilter');
+  minimalPointUntilFilter: number = localStorage.getItem('minimalPointUntilFilter');
+  selectedDifficultiesFilter: string[] = localStorage.getItem('selectedDifficultiesFilter');
+  selectedDisciplinesFilter: string[] = localStorage.getItem('selectedDisciplinesFilter');
+  sortParam: string = localStorage.getItem('sortParam');
 
   constructor(private labWorkService: LabWorkService, private messageService: MessageService, private formBuilder: FormBuilder) {
+    this.splitButtonItems =[
+      {
+        label: 'Количество объектов по сложности', command: () => {
+          this.showModalDialog2()
+        }
+      }
+    ]
+
     this.optionDisciplines = [
       { id: 1, name: 'soa' },
       { id: 2, name: 'blps' }
@@ -74,17 +81,7 @@ export class MainComponent  implements ngOnInit {
   }
 
   ngOnInit() {
-    this.splitButtonItems =[
-      {
-        label: 'Количество объектов по сложности', command: () => {
-          this.showModalDialog2()
-        }
-      }
-    ]
-    this.labWorkService.getAllLabWorks().subscribe(labWorkArray => {
-      this.labWorks = labWorkArray;
-      console.log(this.labWorks);
-    })
+    this.filterList()
   }
 
   createLabWork() {
@@ -108,15 +105,73 @@ export class MainComponent  implements ngOnInit {
   }
 
   filterList() {
+    this.saveFiltersToLocalStorage();
+
     let paramsModel = new ParamsModel(
-      this.name, this.coordinatesXFrom, this.coordinatesXUntil,
-      this.coordinatesYFrom, this.coordinatesYUntil, this.rangeDates, this.minimalPointFrom, this.minimalPointUntil,
-      this.selectedDifficulties, this.selectedDisciplines, this.lectureHours)
+      this.nameFilter, this.coordinatesXFromFilter, this.coordinatesXUntilFiler,
+      this.coordinatesYFromFilter, this.coordinatesYUntilFilter, this.rangeDatesFilter, this.minimalPointFromFilter, this.minimalPointUntilFilter,
+      this.selectedDifficultiesFilter, this.selectedDisciplinesFilter, this.sortParam)
 
     this.labWorkService.getAllLabWorks(paramsModel).subscribe(labWorkArray => {
       this.labWorks = labWorkArray;
       console.log(labWorkArray);
     })
+  }
+
+  saveFiltersToLocalStorage() {
+    (this.nameFilter == null) ? localStorage.removeItem('nameFilter') : localStorage.setItem('nameFilter', this.nameFilter);
+
+    (this.coordinatesXFromFilter == null) ? localStorage.removeItem('coordinatesXFromFilter') :
+      localStorage.setItem('coordinatesXFromFilter', this.coordinatesXFromFilter);
+
+    (this.coordinatesXUntilFiler == null) ? localStorage.removeItem('coordinatesXUntilFiler') :
+      localStorage.setItem('coordinatesXUntilFiler', this.coordinatesXUntilFiler);
+
+    (this.coordinatesYFromFilter == null) ? localStorage.removeItem('coordinatesYFromFilter') :
+      localStorage.setItem('coordinatesYFromFilter', this.coordinatesYFromFilter);
+
+    (this.coordinatesYUntilFilter == null) ? localStorage.removeItem('coordinatesYUntilFilter') :
+      localStorage.setItem('coordinatesYUntilFilter', this.coordinatesYUntilFilter);
+
+    (this.minimalPointFromFilter == null) ? localStorage.removeItem('minimalPointFromFilter') :
+      localStorage.setItem('minimalPointFromFilter', this.minimalPointFromFilter);
+
+    (this.minimalPointUntilFilter == null) ? localStorage.removeItem('minimalPointUntilFilter') :
+      localStorage.setItem('minimalPointUntilFilter', this.minimalPointUntilFilter);
+
+    (this.selectedDifficultiesFilter == null) ? localStorage.removeItem('selectedDifficultiesFilter') :
+      localStorage.setItem('selectedDifficultiesFilter', this.selectedDifficultiesFilter);
+
+    (this.selectedDisciplinesFilter == null) ? localStorage.removeItem('selectedDisciplinesFilter') :
+      localStorage.setItem('selectedDisciplinesFilter', this.selectedDisciplinesFilter);
+  }
+
+  refresh(): void {
+    window.location.reload();
+  }
+
+  resetFilters(): void {
+    this.nameFilter = null;
+    this.coordinatesXFromFilter = null;
+    this.coordinatesXUntilFiler = null;
+    this.coordinatesYFromFilter = null;
+    this.coordinatesYUntilFilter = null;
+    this.rangeDatesFilter = null;
+    this.minimalPointFromFilter = null;
+    this.minimalPointUntilFilter = null;
+    this.selectedDifficultiesFilter = null;
+    this.selectedDisciplinesFilter = null;
+    this.sortParam = null;
+
+    localStorage.removeItem('nameFilter');
+    localStorage.removeItem('coordinatesXFromFilter');
+    localStorage.removeItem('coordinatesXUntilFiler');
+    localStorage.removeItem('coordinatesYFromFilter');
+    localStorage.removeItem('coordinatesYUntilFilter');
+    localStorage.removeItem('minimalPointFromFilter');
+    localStorage.removeItem('minimalPointUntilFilter');
+    localStorage.removeItem('selectedDifficultiesFilter');
+    localStorage.removeItem('selectedDisciplinesFilter');
   }
 
   deleteRandom() {
@@ -133,15 +188,15 @@ export class MainComponent  implements ngOnInit {
   }
 
   isCoordinatesFiltered(): boolean {
-    return this.coordinatesXFrom != null || this.coordinatesXUntil != null || this.coordinatesYUntil != null || this.coordinatesYFrom != null;
+    return this.coordinatesXFromFilter != null || this.coordinatesXUntilFiler != null || this.coordinatesYUntilFilter != null || this.coordinatesYFromFilter != null;
   }
 
   isMinimalPointFiltered(): boolean {
-    return this.minimalPointFrom != null || this.minimalPointUntil != null;
+    return this.minimalPointFromFilter != null || this.minimalPointUntilFilter != null;
   }
 
   isDisciplineFiltered(): boolean {
-    return (this.selectedDisciplines != '' && this.selectedDisciplines != null) || this.lectureHours != null;
+    return (this.selectedDisciplinesFilter != '' && this.selectedDisciplinesFilter != null) || this.lectureHours != null;
   }
 
   showModalDialog1() {
@@ -154,10 +209,6 @@ export class MainComponent  implements ngOnInit {
 
   showModalDialogCreate() {
     this.displayModalCreate = true
-  }
-
-  refresh(): void {
-    window.location.reload();
   }
 }
 

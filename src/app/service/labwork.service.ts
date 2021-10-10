@@ -4,6 +4,7 @@ import {LabWorkModel} from "../model/labwork.model";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {ParamsModel} from "../model/params.model";
 import {formatDate} from "@angular/common";
+import {IntegrityErrorModel} from "../model/error.model";
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +15,8 @@ export class LabWorkService {
   constructor(private httpClient: HttpClient) {
   }
 
-  // TODO RETURN INTEGRITY ERROR
-  addLabWork(labWorkModel: LabWorkModel): Observable<string> {
-    return this.httpClient.post<string>(this.url, labWorkModel);
+  addLabWork(labWorkModel: LabWorkModel): Observable<IntegrityErrorModel> {
+    return this.httpClient.post<IntegrityErrorModel>(this.url, labWorkModel);
   }
 
   getAllLabWorks(paramsModel?: ParamsModel): Observable<Array<LabWorkModel>> {
@@ -41,6 +41,11 @@ export class LabWorkService {
     let params = new HttpParams()
 
     console.log(paramsModel)
+
+    // Sort
+    if (paramsModel.sort != null) {
+      params = params.append('sort', paramsModel.sort)
+    }
 
     // Name
     if (paramsModel.name != null) {
@@ -94,7 +99,7 @@ export class LabWorkService {
     }
 
     // Discipline
-    if (paramsModel.selectedDifficulties != null) {
+    if (paramsModel.selectedDisciplines != null) {
       for (let disc of paramsModel.selectedDisciplines) {
         params = params.append('discipline_name', disc);
       }
