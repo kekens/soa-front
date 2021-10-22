@@ -12,7 +12,7 @@ import {CoordinatesModel} from "../model/coordinates.model";
   providedIn: 'root'
 })
 export class LabWorkService {
-  private url="/soa-1/lab-work"
+  private url="/soa-lab-1/lab-work"
 
   constructor(private httpClient: HttpClient) {
   }
