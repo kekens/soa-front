@@ -7,12 +7,13 @@ import {ParamsModel} from "../model/params.model";
 import {formatDate} from "@angular/common";
 import {FormGroup} from "@angular/forms";
 import {CoordinatesModel} from "../model/coordinates.model";
+import { environment } from "src/environments/environment"
 
 @Injectable({
   providedIn: 'root'
 })
 export class LabWorkService {
-  private url="/soa-lab-1/lab-work"
+  private url=`http://localhost:${environment.serviceOnePort}/soa-back/labworks`
 
   constructor(private httpClient: HttpClient) {
   }
