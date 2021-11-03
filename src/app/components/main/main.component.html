@@ -36,6 +36,8 @@
         <button (click)="opSort.toggle($event)" [ngClass]="{'button-menu-selected' : (sortParam != null )}" pButton pRipple type="button"
                 icon="pi pi-ellipsis-v" class=" p-button-text button-menu"></button>
         <!--  Dialogs for extra actions-->
+        <p-splitButton (onClick)="showModalDialog1()" label="Удалить объект" [model]="splitButtonItems" class="button-split"></p-splitButton>
+
         <p-dialog header="Удалить случайный объект заданной сложности" [dismissableMask]="true" [(visible)]="displayModal1" [modal]="true"
                   [style]="{width: '40vw', top: '-180px'}" [draggable]="false" [resizable]="false">
           <p class="dialog-text">
@@ -50,7 +52,7 @@
         <p-dialog header="Вернуть количество объектов при заданной сложности" [dismissableMask]="true" [(visible)]="displayModal2" [modal]="true"
                   [style]="{width: '40vw', top: '-180px'}" [draggable]="false" [resizable]="false">
           <p class="dialog-text">
-            Выберите сложность, и нажмите кнопку, чтобы посмотреть количество объектов, сложность которых выше заданной
+            Выберите сложность и нажмите кнопку, чтобы посмотреть количество объектов, сложность которых выше заданной
           </p>
           <p-dropdown [options]="optionDifficulties" [(ngModel)]="selectedDifficultyExtra" placeholder="Выберите сложность" optionLabel="name"></p-dropdown>
           <ng-template pTemplate="footer">
@@ -58,7 +60,41 @@
           </ng-template>
         </p-dialog>
 
-        <p-splitButton (onClick)="showModalDialog1()" label="Удалить объект" [model]="splitButtonItems" class="button-split"></p-splitButton>
+        <p-dialog header="Понизить сложность заданной лабораторной работы на указанное число шагов"
+                  [dismissableMask]="true" [(visible)]="displayModal3" [modal]="true"
+                  [style]="{width: '40vw', top: '-180px'}" [draggable]="false" [resizable]="false">
+          <p class="dialog-text">
+            Выберите лабораторную работу и укажите число шагов для понижения сложности
+          </p>
+          <p-dropdown [options]="allLabWorks" [(ngModel)]="selectedLabWorkDecrease" placeholder="Выберите работу" optionLabel="id"></p-dropdown>
+          <div>
+            <br>
+            <span *ngIf="selectedLabWorkDecrease != null">ID: {{selectedLabWorkDecrease? selectedLabWorkDecrease.id : ''}}</span>
+            <br>
+            <br>
+            <span *ngIf="selectedLabWorkDecrease != null">Сложность: {{selectedLabWorkDecrease? selectedLabWorkDecrease.difficulty : ''}}</span>
+          </div>
+          <span>Число шагов: </span>
+          <p-inputNumber [(ngModel)]="stepCount" mode="decimal"></p-inputNumber>
+          <ng-template pTemplate="footer">
+            <p-button icon="pi pi-check" [disabled]="(stepCount == null) || (selectedLabWorkDecrease == null)"
+                      (onClick)="decreaseDifficulty(); displayModal3=false" label="Отправить" styleClass="p-button-text"></p-button>
+          </ng-template>
+        </p-dialog>
+
+        <p-dialog header="Удалить лабораторную работу из программы дисциплины" [dismissableMask]="true" [(visible)]="displayModal4" [modal]="true"
+                  [style]="{width: '40vw', top: '-180px'}" [draggable]="false" [resizable]="false">
+          <p class="dialog-text">
+            Выберите дисциплину и лабораторную работу из ее программы, чтобы удалить ее
+          </p>
+          <p-dropdown [options]="allDisciplines" [(ngModel)]="selectedDiscipline" placeholder="Выберите дисциплину" optionLabel="name"></p-dropdown>
+          <br>
+          <p-dropdown [options]="allLabWorks" [(ngModel)]="selectedLabWorkRemove" placeholder="Выберите лаб. работу" optionLabel="id"></p-dropdown>
+          <ng-template pTemplate="footer">
+            <p-button icon="pi pi-check" [disabled]="(selectedLabWorkRemove == null) || (selectedDiscipline == null)"
+                      (onClick)="deleteFromDiscipline(); displayModal4=false" label="Отправить" styleClass="p-button-text"></p-button>
+          </ng-template>
+        </p-dialog>
 
         <!--Create dialog-->
         <p-dialog header="Добавить лабораторную работу" [dismissableMask]="true" [(visible)]="displayModalCreate" [modal]="true"
@@ -196,7 +232,7 @@
       <button (click)="resetFilters(); filterList()" pButton pRipple type="button" label="Очистить фильтры" class="p-button-text"></button>
     </div>
     <div class="content-subpart content-collection-list">
-      <div class="labwork-content" *ngFor="let lab of labWorkArray">
+      <div class="labwork-content" *ngFor="let lab of labWorkArrayFilter">
         <div class="labwork-content-id">
           <p>
             {{ lab.id }}
@@ -242,7 +278,7 @@
         </div>
       </div>
     </div>
-    <p-paginator #paginator [totalRecords]="allLabWorks.length" [pageLinkSize]="5" [rowsPerPageOptions]="[5, 10,20,30]" (onPageChange)="paginate($event)"></p-paginator>
+    <p-paginator #paginator [totalRecords]="allLabWorks? allLabWorks.length : 100" [pageLinkSize]="5" [rowsPerPageOptions]="[5, 10,20,30]" (onPageChange)="paginate($event)"></p-paginator>
   </div>
 </div>
 

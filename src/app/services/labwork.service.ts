@@ -24,7 +24,7 @@ export class LabWorkService {
     return this.httpClient.post(this.url, labWorkModel);
   }
 
-  getAllLabWorks(): Observable<List<LabWorkModel>> {
+  getAllLabWorks(): Observable<Array<LabWorkModel>> {
     return this.httpClient.get<Array<LabWorkModel>>(this.url).toPromise()
   }
 

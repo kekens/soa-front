@@ -19,21 +19,18 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import {DynamicDialogModule} from 'primeng/dynamicdialog';
 import { PaginatorModule } from 'primeng/paginator';
-import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from "./components/header/header.component";
 import { MainComponent } from "./components/main/main.component";
 import {LabWorkDialogComponent} from "./components/labwork-dialog/labwork-dialog.component";
-import {SecondaryComponent} from "./components/secondary/secondary.component";
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     MainComponent,
-    LabWorkDialogComponent,
-    SecondaryComponent
+    LabWorkDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -56,8 +53,7 @@ import {SecondaryComponent} from "./components/secondary/secondary.component";
     ReactiveFormsModule,
     ConfirmDialogModule,
     DynamicDialogModule,
-    PaginatorModule,
-    AppRoutingModule
+    PaginatorModule
   ],
   providers: [],
   bootstrap: [AppComponent]

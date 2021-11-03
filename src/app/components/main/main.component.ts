@@ -1,5 +1,5 @@
 // @ts-nocheck
-import {Component, ViewChild} from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 import {LabWorkService} from "../../services/labwork.service";
 import {LabWorkModel} from "../../models/labwork.model";
 import {ParamsModel} from "../../models/params.model";
@@ -8,6 +8,9 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DialogService} from "primeng/dynamicdialog";
 import {LabWorkDialogComponent} from "../labwork-dialog/labwork-dialog.component";
 import {Paginator} from "primeng/paginator";
+import {SecondaryService} from "../../services/secondary.service";
+import {DisciplineService} from "../../services/discipline.service";
+import {DisciplineModel} from "../../models/discipline.model";
 
 @Component({
   selector: 'app-main',
@@ -15,7 +18,7 @@ import {Paginator} from "primeng/paginator";
   styleUrls: ['./main.component.scss'],
   providers: [MessageService, ConfirmationService, DialogService]
 })
-export class MainComponent  implements ngOnInit {
+export class MainComponent  implements OnInit {
 
   @ViewChild('paginator', { static: true }) paginator: Paginator
 
@@ -26,17 +29,28 @@ export class MainComponent  implements ngOnInit {
   // ID for finding by ID
   idLab: number;
 
+  // Step count for decreasing difficulty
+  stepCount: number;
+
   // LabWork array for getting results
-  labWorkArray: LabWorkModel[];
+  labWorkArrayFilter: LabWorkModel[];
   allLabWorks: LabWorkModel[];
+
+  // Discipliness
+  allDisciplines: DisciplineModel[];
 
   splitButtonItems: MenuItem[];
 
   displayModal1: boolean;
   displayModal2: boolean;
+  displayModal3: boolean;
+  displayModal4: boolean;
   displayModalCreate: boolean;
 
   selectedDifficultyExtra: Difficulty;
+  selectedLabWorkDecrease: LabWorkModel;
+  selectedLabWorkRemove: LabWorkModel;
+  selectedDiscipline: DisciplineModel;
 
   optionDifficulties: Difficulty[];
   optionDisciplines: Discipline[];
@@ -57,12 +71,24 @@ export class MainComponent  implements ngOnInit {
 
   countAll: number = 0;
 
-  constructor(private labWorkService: LabWorkService, private messageService: MessageService,
-              private formBuilder: FormBuilder, private confirmationService: ConfirmationService, private dialogService: DialogService) {
+  constructor(private labWorkService: LabWorkService, private secondaryService: SecondaryService, private disciplineService: DisciplineService,
+              private messageService: MessageService, private formBuilder: FormBuilder,
+              private confirmationService: ConfirmationService, private dialogService: DialogService)
+  {
     this.splitButtonItems =[
       {
         label: 'Количество объектов по сложности', command: () => {
           this.showModalDialog2()
+        }
+      },
+      {
+        label: 'Понизить сложность лабораторной работы', command: () => {
+          this.showModalDialog3()
+        }
+      },
+      {
+        label: 'Удалить лабораторную работу из дисциплины', command: () => {
+          this.showModalDialog4()
         }
       }
     ]
@@ -99,11 +125,21 @@ export class MainComponent  implements ngOnInit {
 
   ngOnInit() {
     this.findAllLabWorks()
+    this.findAllDisciplines()
 
     this.paginator.rows = this.countFilter
     setTimeout(() => { this.paginator.changePage(this.pageFilter-1) }, 0);
 
     this.filterList()
+  }
+
+  // Disciplines
+
+  findAllDisciplines() {
+    this.disciplineService.getAllDisciplines().subscribe(data => {
+      this.allDisciplines = data
+      console.log(this.allDisciplines)
+    });
   }
 
   // CRUD
@@ -118,8 +154,8 @@ export class MainComponent  implements ngOnInit {
     if (idLab != null) {
       this.labWorkService.getLabWork(idLab).subscribe(data => {
         console.log(data);
-        this.labWorkArray = [];
-        this.labWorkArray.push(data);
+        this.labWorkArrayFilter = [];
+        this.labWorkArrayFilter.push(data);
       }, error => {
         this.printErrors(error);
       })
@@ -149,7 +185,7 @@ export class MainComponent  implements ngOnInit {
     })
   }
 
-  // Update
+  // Update dialog
 
   showDynamicDialog(labWork: LabWorkModel) {
     console.log(labWork.discipline)
@@ -182,11 +218,6 @@ export class MainComponent  implements ngOnInit {
     localStorage.setItem('countFilter', event.rows)
 
     this.filterList()
-
-    //event.first = Index of the first record
-    //event.rows = Number of rows to display in new page
-    //event.page = Index of the new page
-    //event.pageCount = Total number of pages
   }
 
   // Extra methods
@@ -204,19 +235,18 @@ export class MainComponent  implements ngOnInit {
     })
   }
 
-  // Get count of all LabWorks
-  getLabWorkCount(): number {
-    let paramsModel = new ParamsModel(
-      this.nameFilter, this.coordinatesXFromFilter, this.coordinatesXUntilFiler,
-      this.coordinatesYFromFilter, this.coordinatesYUntilFilter, this.rangeDatesFilter, this.minimalPointFromFilter, this.minimalPointUntilFilter,
-      this.selectedDifficultiesFilter, this.selectedDisciplinesFilter, this.sortParam, null, null)
-
-
-    this.labWorkService.getAllLabWorksFiltering(paramsModel).subscribe(labWorkArray => {
-      this.countAll = labWorkArray.length
+  decreaseDifficulty() {
+    this.secondaryService.decreaseDifficulty(this.selectedLabWorkDecrease.id, this.stepCount).subscribe(data => {
+      this.messageService.add({severity:'success', summary:'Успех', detail: 'Сложность понижена'});
+      this.refresh();
     })
+  }
 
-    return this.countAll
+  deleteFromDiscipline() {
+    this.secondaryService.removeLabWorkFromDiscipline(this.selectedDiscipline.id, this.selectedLabWorkRemove.id).subscribe(data => {
+      this.messageService.add({severity:'success', summary:'Успех', detail: 'Лабораторная удалена'});
+      this.refresh()
+    })
   }
 
   // Filter
@@ -230,7 +260,7 @@ export class MainComponent  implements ngOnInit {
       this.selectedDifficultiesFilter, this.selectedDisciplinesFilter, this.sortParam, this.pageFilter, this.countFilter)
 
     this.labWorkService.getAllLabWorksFiltering(paramsModel).subscribe(labWorkArray => {
-      this.labWorkArray = labWorkArray;
+      this.labWorkArrayFilter = labWorkArray;
       console.log(labWorkArray);
     })
   }
@@ -329,6 +359,14 @@ export class MainComponent  implements ngOnInit {
 
   showModalDialog2() {
     this.displayModal2 = true
+  }
+
+  showModalDialog3() {
+    this.displayModal3 = true
+  }
+
+  showModalDialog4() {
+    this.displayModal4 = true
   }
 
   showModalDialogCreate() {
