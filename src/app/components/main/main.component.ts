@@ -28,6 +28,7 @@ export class MainComponent  implements ngOnInit {
 
   // LabWork array for getting results
   labWorkArray: LabWorkModel[];
+  allLabWorks: LabWorkModel[];
 
   splitButtonItems: MenuItem[];
 
@@ -97,7 +98,8 @@ export class MainComponent  implements ngOnInit {
   }
 
   ngOnInit() {
-    this.paginator.totalRecords = 100
+    this.findAllLabWorks()
+
     this.paginator.rows = this.countFilter
     setTimeout(() => { this.paginator.changePage(this.pageFilter-1) }, 0);
 
@@ -105,6 +107,10 @@ export class MainComponent  implements ngOnInit {
   }
 
   // CRUD
+
+  async findAllLabWorks() {
+    this.allLabWorks = await this.labWorkService.getAllLabWorks();
+  }
 
   findLabWorkById(idLab: number) {
     this.resetFilters()
@@ -206,7 +212,7 @@ export class MainComponent  implements ngOnInit {
       this.selectedDifficultiesFilter, this.selectedDisciplinesFilter, this.sortParam, null, null)
 
 
-    this.labWorkService.getAllLabWorks(paramsModel).subscribe( labWorkArray => {
+    this.labWorkService.getAllLabWorksFiltering(paramsModel).subscribe(labWorkArray => {
       this.countAll = labWorkArray.length
     })
 
@@ -223,7 +229,7 @@ export class MainComponent  implements ngOnInit {
       this.coordinatesYFromFilter, this.coordinatesYUntilFilter, this.rangeDatesFilter, this.minimalPointFromFilter, this.minimalPointUntilFilter,
       this.selectedDifficultiesFilter, this.selectedDisciplinesFilter, this.sortParam, this.pageFilter, this.countFilter)
 
-    this.labWorkService.getAllLabWorks(paramsModel).subscribe(labWorkArray => {
+    this.labWorkService.getAllLabWorksFiltering(paramsModel).subscribe(labWorkArray => {
       this.labWorkArray = labWorkArray;
       console.log(labWorkArray);
     })

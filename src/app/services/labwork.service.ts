@@ -24,6 +24,10 @@ export class LabWorkService {
     return this.httpClient.post(this.url, labWorkModel);
   }
 
+  getAllLabWorks(): Observable<List<LabWorkModel>> {
+    return this.httpClient.get<Array<LabWorkModel>>(this.url).toPromise()
+  }
+
   getLabWork(id: number): Observable<LabWorkModel> {
     return this.httpClient.get<LabWorkModel>(this.url + '/' + id);
   }
@@ -36,9 +40,7 @@ export class LabWorkService {
     return this.httpClient.put(this.url, labWorkModel);
   }
 
-  // Extra methods
-
-  getAllLabWorks(paramsModel?: ParamsModel): Observable<Array<LabWorkModel>> {
+  getAllLabWorksFiltering(paramsModel?: ParamsModel): Observable<Array<LabWorkModel>> {
     if (paramsModel != null) {
       console.log(paramsModel)
       let params = this.getParams(paramsModel)
@@ -47,6 +49,8 @@ export class LabWorkService {
       return this.httpClient.get<Array<LabWorkModel>>(this.url);
     }
   }
+
+  // Extra methods
 
   deleteRandomLabWork(difficulty: string): Observable<string> {
     return this.httpClient.delete<string>(this.url+'/difficulty?difficulty=' + difficulty);

@@ -3,7 +3,7 @@
   <div class="content-part content-title">
     <div class="content-subpart content-subpart-title">
       <div class="content-subpart-title-text">
-        Лабораторные работы <p class="text-count" >[{{labWorkArray? labWorkArray.length : '0'}}]</p>
+        Лабораторные работы <p class="text-count" >[{{allLabWorks? allLabWorks.length : '0'}}]</p>
 
         <!--        Search by id-->
         <p-inputNumber class="input-search-id" [min]="0" (keydown.enter)="findLabWorkById(idLab);" placeholder="Введите ID" [(ngModel)]="idLab" mode="decimal" [useGrouping]="false">
@@ -242,7 +242,7 @@
         </div>
       </div>
     </div>
-    <p-paginator #paginator [pageLinkSize]="5" [rowsPerPageOptions]="[5, 10,20,30]" (onPageChange)="paginate($event)"></p-paginator>
+    <p-paginator #paginator [totalRecords]="allLabWorks.length" [pageLinkSize]="5" [rowsPerPageOptions]="[5, 10,20,30]" (onPageChange)="paginate($event)"></p-paginator>
   </div>
 </div>
 
