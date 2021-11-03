@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  serviceOnePort: 8080
+  serviceOnePort: 1111,
+  serviceTwoPort: 8080
 };
 
 /*

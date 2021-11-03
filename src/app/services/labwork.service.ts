@@ -1,19 +1,19 @@
 // @ts-nocheck
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs";
-import {LabWorkModel} from "../model/labwork.model";
+import {LabWorkModel} from "../models/labwork.model";
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {ParamsModel} from "../model/params.model";
+import {ParamsModel} from "../models/params.model";
 import {formatDate} from "@angular/common";
 import {FormGroup} from "@angular/forms";
-import {CoordinatesModel} from "../model/coordinates.model";
+import {CoordinatesModel} from "../models/coordinates.model";
 import { environment } from "src/environments/environment"
 
 @Injectable({
   providedIn: 'root'
 })
 export class LabWorkService {
-  private url=`http://localhost:${environment.serviceOnePort}/soa-back/labworks`
+  private url=`http://localhost:${environment.serviceOnePort}/soa-back-1/labworks`
 
   constructor(private httpClient: HttpClient) {
   }

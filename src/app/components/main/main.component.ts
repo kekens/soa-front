@@ -1,8 +1,8 @@
 // @ts-nocheck
 import {Component, ViewChild} from '@angular/core';
-import {LabWorkService} from "../service/labwork.service";
-import {LabWorkModel} from "../model/labwork.model";
-import {ParamsModel} from "../model/params.model";
+import {LabWorkService} from "../../services/labwork.service";
+import {LabWorkModel} from "../../models/labwork.model";
+import {ParamsModel} from "../../models/params.model";
 import {ConfirmationService, MenuItem, MessageService} from "primeng/api";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DialogService} from "primeng/dynamicdialog";

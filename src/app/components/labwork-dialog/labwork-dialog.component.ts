@@ -1,9 +1,9 @@
 // @ts-nocheck
 import {Component, OnInit} from '@angular/core';
-import {LabWorkService} from "../service/labwork.service";
+import {LabWorkService} from "../../services/labwork.service";
 import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {LabWorkModel} from "../model/labwork.model";
+import {LabWorkModel} from "../../models/labwork.model";
 import {MessageService} from "primeng/api";
 
 @Component({
