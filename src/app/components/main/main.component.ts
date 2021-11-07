@@ -239,13 +239,17 @@ export class MainComponent  implements OnInit {
     this.secondaryService.decreaseDifficulty(this.selectedLabWorkDecrease.id, this.stepCount).subscribe(data => {
       this.messageService.add({severity:'success', summary:'Успех', detail: 'Сложность понижена'});
       this.refresh();
+    }, error => {
+      this.printErrors(error)
     })
   }
 
   deleteFromDiscipline() {
     this.secondaryService.removeLabWorkFromDiscipline(this.selectedDiscipline.id, this.selectedLabWorkRemove.id).subscribe(data => {
       this.messageService.add({severity:'success', summary:'Успех', detail: 'Лабораторная удалена'});
-      this.refresh()
+      this.refresh();
+    }, error => {
+      this.printErrors(error)
     })
   }
 

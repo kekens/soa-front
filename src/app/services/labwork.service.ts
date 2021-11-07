@@ -13,7 +13,7 @@ import { environment } from "src/environments/environment"
   providedIn: 'root'
 })
 export class LabWorkService {
-  private url=`http://localhost:${environment.serviceOnePort}/soa-back-1/labworks`
+  private url=`https://localhost:${environment.serviceOnePort}/soa-back-1/labworks`
 
   constructor(private httpClient: HttpClient) {
   }

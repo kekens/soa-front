@@ -66,12 +66,10 @@
           <p class="dialog-text">
             Выберите лабораторную работу и укажите число шагов для понижения сложности
           </p>
-          <p-dropdown [options]="allLabWorks" [(ngModel)]="selectedLabWorkDecrease" placeholder="Выберите работу" optionLabel="id"></p-dropdown>
+          <p-dropdown [style]="{margin: '25px'}" [options]="allLabWorks" [(ngModel)]="selectedLabWorkDecrease" placeholder="Выберите работу" optionLabel="id"></p-dropdown>
           <div>
             <br>
-            <span *ngIf="selectedLabWorkDecrease != null">ID: {{selectedLabWorkDecrease? selectedLabWorkDecrease.id : ''}}</span>
-            <br>
-            <br>
+            <span style="margin-right: 10px;" *ngIf="selectedLabWorkDecrease != null">ID: {{selectedLabWorkDecrease? selectedLabWorkDecrease.id : ''}}</span>
             <span *ngIf="selectedLabWorkDecrease != null">Сложность: {{selectedLabWorkDecrease? selectedLabWorkDecrease.difficulty : ''}}</span>
           </div>
           <span>Число шагов: </span>

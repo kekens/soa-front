@@ -6,7 +6,7 @@ import {HttpClient} from "@angular/common/http";
   providedIn: 'root'
 })
 export class SecondaryService {
-  private url=`http://localhost:${environment.serviceTwoPort}/soa-back-2/bars`
+  private url=`https://localhost:${environment.serviceTwoPort}/soa-back-2/bars`
 
   constructor(private httpClient: HttpClient) {
   }

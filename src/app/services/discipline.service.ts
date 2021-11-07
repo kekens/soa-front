@@ -8,7 +8,7 @@ import {DisciplineModel} from "../models/discipline.model";
   providedIn: 'root'
 })
 export class DisciplineService {
-  private url=`http://localhost:${environment.serviceOnePort}/soa-back-1/disciplines`
+  private url=`https://localhost:${environment.serviceOnePort}/soa-back-1/disciplines`
 
   constructor(private httpClient: HttpClient) {
   }

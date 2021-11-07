@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  serviceOnePort: 1111,
-  serviceTwoPort: 8080
+  serviceOnePort: 18443,
+  serviceTwoPort: 28181
 };
